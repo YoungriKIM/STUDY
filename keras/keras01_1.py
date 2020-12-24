@@ -18,7 +18,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련 / fit은 훈련시키는 것임
 model.compile(loss='mse', optimizer='adam') #loss를 mse로 측정을 하고 그것을 위한 최적화는 adam을 써라 
-model.fit(x,y, epochs=1000, batch_size=1) #epochs는 학습 횟수임 100번 하자
+model.fit(x,y, epochs=100, batch_size=1) #epochs는 학습 횟수임 100번 하자
 #batch_size는 학습에 들어가는 데이터 사이즈임, 한 번에 몇개의 문제를 풀건지(사이즈가 클수록 빠르고 작을 수록 정확하다)
 #이 시점에서 w와 b는 이미 생성이 된 것임
 
