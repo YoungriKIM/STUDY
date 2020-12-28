@@ -18,7 +18,8 @@ model.add(Dense(1))
 
 #3. 컴파일하고 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2) #이때 발리데이션에서 쪼갠다는 것인데, 핏에 넣은 train 데이터의 20%를 쓴다는 것이다. 즉 9,10임
+model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
+#이때 발리데이션에서 쪼갠다는 것인데, 핏에 넣은 train 데이터의 20%를 쓴다는 것이다. 즉 9,10임 그리고 임의적으로 떼옴
 
 #4.평가, 예측
 results = model.evaluate(x_test, y_test, batch_size=1) #이번에는 loss라고 안하고 result라고 하자. 헷갈리니까

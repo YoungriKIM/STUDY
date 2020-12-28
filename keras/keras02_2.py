@@ -16,7 +16,7 @@ x_predict = np.array([111,112,113]) #예측할 때 쓸 것도 주자
 
 #2. 모델을 구성하자
 model = Sequential()
-model.add(Dense(50, input_dim = 1, activation='relu'))
+model.add(Dense(50, input_dim = 1, activation='linear')) #linear 보다 relu가 더 성능이 좋다. 여기까지만 알아둬라
 model.add(Dense(1))
 #이 부분을 바꾸는 걸 튜닝, 튠 한다고 한다.
 
