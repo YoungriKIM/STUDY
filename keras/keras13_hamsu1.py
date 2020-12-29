@@ -25,7 +25,7 @@ print(x_train.shape)  #(80,5)
 print(y_train.shape)  #(80,2)
 
 #모델 구성
-#함수형 모델을 구성해보자(이 함수형 모델과 아레 시퀀셜 모델은 같다.)
+#함수형 모델을 구성해보자(이 함수형 모델과 아래 시퀀셜 모델은 같다.)
 input1 = Input(shape=(5,)) #인풋쉐이프에 대해서 명시해주고
 dense1 = Dense(5, activation='relu')(input1) #인풋을 꼬리에 이어줘
 dense2 = Dense(3)(dense1) #위 레이어의 아웃풋이 얘의 인풋이니까 다시 이어주고

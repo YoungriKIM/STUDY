@@ -11,13 +11,13 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffl
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, shuffle=True)
 
 print(x_train.shape)
-print(x_val.shape)
 print(x_test.shape)
+print(x_val.shape)
 
 model = Sequential()
-model.add(Dense(10, input_dim=1, activation='relu'))
-model.add(Dense(30))
-model.add(Dense(15))
+model.add(Dense(5, input_dim=1, activation='relu'))
+model.add(Dense(10))
+model.add(Dense(5))
 model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
@@ -28,8 +28,13 @@ print('loss: ', loss)
 print('mae: ', mae)
 
 y_predict = model.predict(x_test)
-#print('y_predict: ', y_predict)
+# print('y_pred: ', y_pred)
 
-# # 2020-12-28
-# loss:  5.7765759265748784e-05
-# mae:  0.007031536195427179
+from sklearn.metrics import mean_squared_error
+def RMSE(y_test, y_pred):
+    return np.sqrt(mean_squared_error(y_test, y_pred))
+
+print('RMSE: ', RMSE(y_test, y_predict))
+
+from sklearn.metrics import r2_score
+

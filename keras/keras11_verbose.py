@@ -39,18 +39,17 @@ model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2, verb
 # evaluate에 써도 된다.
 '''
 verbose=장황한
-+ verobose = 0 : 훈련과정이 아예 안 보임
-+ verobose = 1 : 훈련과정이 모두 보임 (디폴트)
++ verbose = 0 : 훈련과정(logging)이 아예 안 보임
++ verbose = 1 : 훈련과정이 모두 보임 (디폴트)
 64/64 [==============================] - 0s 3ms/step - loss: 7155.4707 - mae: 58.6185 - val_loss: 818.9250 - val_mae: 21.0954
 Epoch 2/100
-+ verobose = 2 :
++ verbose = 2 :
 64/64 - 0s - loss: 221494.2656 - mae: 401.2755 - val_loss: 107248.1562 - val_mae: 283.1143
 Epoch 2/100
-+ verobose = 3 :
++ verbose = 3 :
 Epoch 2/100
-+ verobose = 4 : 3과 동일
++ verbose = 4 이상 : 3과 동일
 '''
-
 
 loss, mae = model.evaluate(x_test, y_test, batch_size=1)
 print('loss: ', loss)
