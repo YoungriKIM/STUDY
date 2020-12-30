@@ -46,7 +46,7 @@ model.summary() #모델 축약
 
 #컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=50, batch_size=1, validation_split=0.2, verbose=0)
+model.fit(x_train, y_train, epochs=5000, batch_size=1, validation_split=0.2, verbose=0)
 
 loss, mae = model.evaluate(x_test, y_test, batch_size=1)
 print('loss: ', loss)

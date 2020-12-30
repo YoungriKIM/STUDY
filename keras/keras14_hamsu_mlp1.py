@@ -1,5 +1,8 @@
-#다:1 mlp
+# 다:1 mlp - 함수형
+# keras10_mlp2를 함수형으로 변형
 
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Input
 import numpy as np
 
 x = np.array([range(100), range(301, 401), range(1, 101)])
@@ -12,9 +15,8 @@ x = np.transpose(x)
 # print(x)
 print(x.shape) #(100,3)
 
-from sklearn.model_selection import train_test_split #요건 행을 정리하는 거임, 열을 건드리지 않음 특성(열,칼럼)을 정리하는 거임
+from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=66)
-#그냥 셔플을 돌려버리면 매번 돌릴 때 마다 달라져 비교평가하기가 힘드니까 random난수를 정해주는 것이다.
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2)
 
 print(x_train.shape)   #(64,3)
@@ -27,18 +29,23 @@ print(y_test.shape)   #(20,)
 
 
 #모델 구성
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
 
-model = Sequential()
-model.add(Dense(10, input_dim=3))
-model.add(Dense(5))
-model.add(Dense(5))
-model.add(Dense(1))
+# model = Sequential()
+# model.add(Dense(10, input_dim=3))
+# model.add(Dense(5))
+# model.add(Dense(5))
+# model.add(Dense(1))
+
+inputs = Input(shape=(3,))
+d1 = Dense(10)(inputs)
+d2 = Dense(8)(d1)
+d3 = Dense(3)(d2)
+outputs = Dense(1)(d3)
+model = Model(inputs = inputs, outputs = outputs)
 
 #컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=100, batch_size=1, validation_data=(x_val, y_val))
+model.fit(x_train, y_train, epochs=100, batch_size=1, validation_data=(x_val, y_val), verbose=3)
 
 loss, mae = model.evaluate(x_test, y_test, batch_size=1)
 print('loss: ', loss)
@@ -56,5 +63,3 @@ print('RMSE: ', RMSE(y_test, y_predict))
 from sklearn.metrics import r2_score
 R2 = r2_score(y_test, y_predict)
 print('R2: ', R2)
-
-#모델을 대충 짰는데도 결과값이 잘 나오는 이유는 x1, x2, x3에 대한 w가 모두 1(b는 다를 수 있으나 큰 영향 없음)이기 때문이다.
