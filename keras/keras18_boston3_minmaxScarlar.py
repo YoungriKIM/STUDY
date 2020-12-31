@@ -31,6 +31,7 @@ from sklearn.preprocessing import MinMaxScaler #preprocessing = 전처리
 scaler = MinMaxScaler() #민맥스캘러를 스캘러라고 부르겠삼
 scaler.fit(x) #민맥스캘러를 해라 x에
 x = scaler.transform(x) #모든 x의 칼럼에 711을 나눈 것이 아니라 각 칼럼에 맞는 최대,최소를 구해서 해주는 것이다. 위의 x = x/711은 칼럼별이 아니다.
+#그런데 이러면 트레인을 기준으로 한 fit이 아니기때문에 fit을 트레인만 해주자 > 다음 파일
 
 print(np.max(x), np.min(x)) #1.0 0.0
 #이러면 내가 데이터의 최대 최소를 몰라도 전처리를 할 수 있다.

@@ -17,10 +17,9 @@ print(np.max(x), np.min(x)) #711.0 0.0
 print('=================================')
 print(dataset.feature_names) #열의 이름
 
-#넘파이가 연산하는 걸 잘한다니까 0과1사이로 데이터를 전처리해주면 좋겠지?
+#넘파이가 연산하는 걸 잘한다니까 0과1사이로 데이터를 전처리해주면 좋겠지? > 다음 파일로
 
 
-'''
 #트레인이랑 테스트 분리
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=66)
@@ -58,4 +57,3 @@ print('RMSE: ', RMSE(y_test, y_predict1))
 from sklearn.metrics import r2_score
 R2 = r2_score(y_test, y_predict1)
 print('R2: ', R2)
-'''
