@@ -23,10 +23,11 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Input
 
 input1 = Input(shape=(13,))
-dense1 = Dense(280, activation='relu')(input1)
-dense1 = Dense(102, activation='relu')(dense1)
-dense1 = Dense(102)(dense1)
-dense1 = Dense(32)(dense1)
+dense1 = Dense(70, activation='relu')(input1)
+dense1 = Dense(140, activation='relu')(dense1)
+dense1 = Dense(140, activation='relu')(dense1)
+dense1 = Dense(140, activation='relu')(dense1)
+dense1 = Dense(70, activation='relu')(dense1)
 output1 = Dense(1)(dense1)
 
 model = Model(inputs=input1, outputs=output1)
@@ -35,11 +36,11 @@ model = Model(inputs=input1, outputs=output1)
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor='loss', patience=40, mode='min')
-model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y_val), verbose=1, callbacks=[early_stopping])
+early_stopping = EarlyStopping(monitor='loss', patience=20, mode='min')
+model.fit(x_train, y_train, epochs=2000, batch_size=2, validation_data=(x_val, y_val), verbose=1, callbacks=[early_stopping])
 
 #평가, 예측
-loss, mae = model.evaluate(x_test, y_test, batch_size=1)
+loss, mae = model.evaluate(x_test, y_test, batch_size=2)
 print('loss, mae: ', loss, mae)
 
 y_predict = model.predict(x_test)
@@ -59,7 +60,7 @@ print('R2: ', R2)
 # RMSE:  3.3730985125849697
 # R2:  0.8633197073667653
 
-#2번파일
-# loss, mae:  24.340560913085938 3.340592861175537
-# RMSE:  4.933615489805915
-# R2:  0.7075992732908871
+#2번파일 
+# loss, mae:  23.424747467041016 3.4580018520355225
+# RMSE:  4.8399119673460556
+# R2:  0.7186008543791937

@@ -12,3 +12,8 @@ print(y.shape) #(506,)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8, shuffle=True, random_state=311)
+
+#모델 구성
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Input
+

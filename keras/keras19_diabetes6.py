@@ -15,7 +15,7 @@ print(x.shape, y.shape) #(442, 10) (442,)
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8, shuffle=True, random_state=66)
 from sklearn.model_selection import train_test_split
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size = 0.7, shuffle=True, random_state=66)
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size = 0.8, shuffle=True, random_state=66)
 
 #데이터 전처리 (MinMaxScaler를 이용해서 , 기준은 x_train으로)
 from sklearn.preprocessing import MinMaxScaler
@@ -30,12 +30,11 @@ from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Dense, Input
 
 model = Sequential()
-model.add(Dense(8, input_shape=(10,)))
-model.add(Dense(12))
-model.add(Dense(16))
-model.add(Dense(20))
-model.add(Dense(24))
-model.add(Dense(28))
+model.add(Dense(42, input_shape=(10,)))
+model.add(Dense(84))
+model.add(Dense(84))
+model.add(Dense(84))
+model.add(Dense(42))
 model.add(Dense(1))
 
 #컴파일, 훈련 (Earlystopping 적용)
@@ -43,7 +42,7 @@ model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 
 from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor='loss', patience=20, mode='min')
-model.fit(x_train, y_train, epochs=1000, batch_size=4, validation_data=(x_val, y_val), verbose=1, callbacks=[early_stopping])
+model.fit(x_train, y_train, epochs=1000, batch_size=10, validation_data=(x_val, y_val), verbose=1, callbacks=[early_stopping])
 
 #평가, 예측
 loss, mae = model.evaluate(x_test, y_test, batch_size=1)
@@ -87,6 +86,6 @@ print('R2: ', R2)
 # R2:  0.4032728564644378
 
 #6파일
-# loss, mae:  3296.116455078125 47.4950065612793
-# RMSE:  57.41180748621596
-# R2:  0.4921270999525814
+# loss, mae:  3121.9990234375 46.306800842285156
+# RMSE:  55.87484721026777
+# R2:  0.5189554519135346
