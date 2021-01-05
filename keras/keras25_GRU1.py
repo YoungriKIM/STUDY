@@ -1,4 +1,4 @@
-#SimpleRNN을 GRYU로 바꿔보자
+#SimpleRNN을 GRU로 바꿔보자
 
 #1. 데이터
 import numpy as np
