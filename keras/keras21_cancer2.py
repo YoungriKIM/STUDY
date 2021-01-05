@@ -1,16 +1,20 @@
 # 21-1의 predict 값이 소수점이 아니라 0.1 로 나오게 할 것
 
 import numpy as np
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Input
+
+#1. 데이터 주고
 from sklearn.datasets import load_breast_cancer
+dataset = load_breast_cancer()
+x = dataset.data
+y = dataset.target
 
-#1. 데이터
-datasets = load_breast_cancer()
+# print(x.shape, y.shape) #(569, 30) (569,)
+# print('x[:5]: ',x[:5]) #전처리가 안 되어있음
+# print('y: ',y) #값이 0과 1로 이진분류임
 
-x = datasets.data
-y = datasets.target
-# print(x.shape) #(569, 30)
-# print(y.shape) #(569,)
-
+#전처리(y벡터화, 트레인테스트나누기, 민맥스스케일러)
 from tensorflow.keras.utils import to_categorical
 y = to_categorical(y)
 
@@ -27,38 +31,44 @@ x_train = scaler.transform(x_train)
 x_val = scaler.transform(x_val)
 x_test = scaler.transform(x_test)
 
-#2. 모델 구성
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+#모델 구성
+input1 = Input(shape=(30,))
+dense1 = Dense(120, activation='relu')(input1)
+dense1 = Dense(120)(dense1)
+dense1 = Dense(60)(dense1)
+dense1 = Dense(60)(dense1)
+dense1 = Dense(60)(dense1)
+output1 = Dense(2, activation='sigmoid')(dense1)
+model = Model(inputs = input1, outputs = output1)
 
-model = Sequential()
-model.add(Dense(120, activation='relu', input_shape=(30,)))
-model.add(Dense(120))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(2, activation='sigmoid'))
-
-#4. 컴파일, 훈련
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc']) 
+#컴파일, 훈련
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor='acc', patience=15, mode='max')
+stop = EarlyStopping(monitor='loss', patience=5, mode='min')
+model.fit(x_train, y_train, epochs=1000, batch_size=30, validation_data=(x_val, y_val), verbose=2, callbacks=[stop])
 
-model.fit(x_train, y_train, epochs=2000, batch_size=15, validation_data=(x_val, y_val), verbose=2, callbacks=[early_stopping])
-
-loss, acc = model.evaluate(x_test, y_test, batch_size=3)
-print('loss, acc: ', loss, acc)
+#검증, 예측
+loss = model.evaluate(x_test, y_test, batch_size=10)
+print('loss: ', loss)
 
 y_predict = model.predict(x_test[-5:-1])
-print('y_test[-5:-1]: ', y_test[-5:-1])
+
 print('y_predict: ', y_predict)
+# [[1.0000000e+00 8.6358709e-10]
+#  [4.4308349e-02 9.5791960e-01]
+#  [1.0000000e+00 3.0873505e-08]
+#  [1.0034841e-02 9.9010718e-01]]
 
+print('y_predict_argmax: ', y_predict.argmax(axis=1)) #0이 열, 1이 행
+# [0 1 0 1]
 
-# loss, acc:  0.11559246480464935 0.9824561476707458
-# y_test[-5:-1]:  [0 1 0 1]
-# y_predict:  [[1.23250155e-14] > 0.5미만 > 0
-#  [9.83964145e-01] > 0.5이상 > 1
-#  [5.24317222e-12] > 0.5미만 > 0
-#  [9.95472968e-01]] > 0.5이상 > 1
-#> 소수점이 나오는 이유는 sigmoid가 0~1사이이기 때문이다. 0.5이상은 1, 0.5미만은 0으로 바꾸는 작업이 필요하다.
+print('y_test[-5:-1]: ',y_test[-5:-1])
+# [[1. 0.]
+#  [0. 1.]
+#  [1. 0.]
+#  [0. 1.]]
+
+# print(y_predict.argmax(axis=1).shape) #(4,)
+# print(y_test[-5:-1].shape) #(4,2)
+
