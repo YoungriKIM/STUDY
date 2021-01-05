@@ -58,9 +58,9 @@ model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y
 loss = model.evaluate(x_test, y_test, batch_size=1)
 print('loss: ', loss)
 
-# y_predict = model.predict(x_test[-5:-1])
-# print('y_predict: ', y_predict)
-# print('y_test[-5:-1]: ', y_test[-5:-1])
+y_predict = model.predict(x_test[-5:-1])
+print('y_predict: ', y_predict)
+print('y_test[-5:-1]: ', y_test[-5:-1])
 
 #======================= 22-1-1
 # loss:  [0.12436151504516602, 0.9666666388511658, 0.04672175273299217]

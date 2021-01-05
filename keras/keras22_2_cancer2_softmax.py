@@ -51,9 +51,20 @@ model.fit(x_train, y_train, epochs=1000, batch_size=10, validation_data=(x_val, 
 #.평가, 예측
 loss = model.evaluate(x_test, y_test, batch_size=2)
 print('loss: ', loss)
+# loss:  [0.16481192409992218, 0.9912280440330505, 0.00877323467284441]
 
 y_predict = model.predict(x[:5])
-print('y_predict: ', y_predict)
-print('y[:5]: ', y[:5])
 
-# loss:  [0.16481192409992218, 0.9912280440330505, 0.00877323467284441]
+print('y_predict: ', y_predict)
+#  [[1. 0.]
+#  [1. 0.]
+#  [1. 0.]
+#  [1. 0.]
+#  [1. 0.]]
+
+print('y[:5]: ', y[:5])
+# [[1. 0.]
+#  [1. 0.]
+#  [1. 0.]
+#  [1. 0.]
+#  [1. 0.]]

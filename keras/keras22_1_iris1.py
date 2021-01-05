@@ -1,4 +1,3 @@
-#acc: 1.0 나올 때 까지 튜닝
 
 import numpy as np
 from sklearn.datasets import load_iris #회귀의 대표 모델은 보스턴이랑 당뇨병, 이중분류는 유방암, 다중분류는 아이리스임
@@ -66,18 +65,29 @@ model.add(Dense(3, activation='softmax')) #다중분류는 softmax, 이진분류
 #아웃풋레이어의 노드를 3개로 잡아야 한다. 분류의 개수가 3개니까
 #그러니 y를 원핫인코딩을 하여 3개로 나눠주여야 한다.
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc', 'mae'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='loss', patience=20, mode='min')
+earlystopping = EarlyStopping(monitor='acc', patience=20, mode='max')
 model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y_val), verbose=2, callbacks=earlystopping)
 
-loss = model.evaluate(x_test, y_test, batch_size=1)
+loss = model.evaluate(x_test, y_test, batch_size=2)
 print('loss: ', loss)
 
-# y_predict = model.predict(x_test[-5:-1])
-# print('y_predict: ', y_predict)
-# print('y_test[-5:-1]: ', y_test[-5:-1])
+y_predict = model.predict(x_test[-5:-1])
+print('y_predict: ', y_predict)
+# [[7.5330843e-07 1.9251958e-05 9.9997997e-01]
+#  [9.9999928e-01 6.8017545e-07 1.5129948e-25]
+#  [8.4829569e-01 1.5170434e-01 4.8426992e-12]
+#  [1.4563526e-04 3.5173717e-01 6.4811718e-01]]
+# y onehotencoding 해서 결과 달라지는 것 보기
 
-print('===========================')
+print('y_test[-5:-1]: ', y_test[-5:-1])
+# [[0. 0. 1.]
+#  [1. 0. 0.]
+#  [1. 0. 0.]
+#  [0. 0. 1.]]
+
+#'==========================='
 # loss:  [0.12436151504516602, 0.9666666388511658, 0.04672175273299217]
+
