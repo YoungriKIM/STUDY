@@ -37,17 +37,16 @@ lstm1 = LSTM(27, activation='relu')(input1)
 dense1 = Dense(18, activation='relu')(lstm1)
 dense1 = Dense(9, activation='relu')(dense1)
 
-
 input2 = Input(shape=(3,1))
 lstm2 = LSTM(27, activation='relu')(input1)
 dense2 = Dense(18, activation='relu')(lstm1)
 dense2 = Dense(9, activation='relu')(dense1)
 
 merge1 = concatenate([dense1, dense2])
-middle = Dense(27)(merge1)
-middle = Dense(27)(merge1)
+middle = Dense(18)(merge1)
+middle = Dense(18)(middle)
 
-output1 = Dense(27)(middle)
+output1 = Dense(36)(middle)
 output1 = Dense(18)(middle)
 output1 = Dense(9)(output1)
 output1 = Dense(1)(output1)
@@ -57,7 +56,7 @@ model = Model(inputs = [input1, input2], outputs = output1)
 # model.summary()
 
 #3. 컴파일, 훈련
-model.compile(loss='mae', optimizer='adam')
+model.compile(loss='mse', optimizer='adam')
 
 from tensorflow.keras.callbacks import EarlyStopping
 stop = EarlyStopping(monitor='loss', patience=20, mode='min')
@@ -72,5 +71,6 @@ y_pred= model.predict([x1_predict, x2_predict])
 print('y_pred: ', y_pred)
 
 #내가 원하는 값은 85
-# loss:  0.4341999590396881
-# y_pred:  [[85.56332]]
+# 436/1000
+# loss:  0.05432714894413948
+# y_pred:  [[85.81537]]
