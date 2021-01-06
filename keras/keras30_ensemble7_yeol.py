@@ -55,12 +55,10 @@ merge1 = concatenate([dense1, dense2])
 middle = Dense(18)(merge1)
 middle = Dense(18)(middle)
 
-output1 = Dense(36)(middle)
 output1 = Dense(18)(middle)
 output1 = Dense(9)(output1)
 output1 = Dense(3)(output1)
 
-output2 = Dense(36)(middle)
 output2 = Dense(18)(middle)
 output2 = Dense(9)(output2)
 output2 = Dense(1)(output2)
@@ -97,9 +95,9 @@ print('y2_pred: ', y2_pred)
 #   y sizes: 6, 8
 
 #30-7 두 데이터의 열이 다름 > 열이 다른 건 된다.
-# loss:  [9.486475944519043, 3.4037082195281982, 6.082767486572266]
-# y1_pred:  [[ 5.200331   3.2166598 -1.5192156]]
-# y2_pred:  [[91.20315]]
+# loss:  [5.882585048675537, 4.469101428985596, 1.4134836196899414]
+# y1_pred:  [[7.091115  4.721337  4.5430965]]
+# y2_pred:  [[94.68496]]
 
 '''
 앙상블 모델에 대한 궁금증

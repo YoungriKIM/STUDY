@@ -25,7 +25,7 @@ print(dataset.shape) #(95, 6)
 
 x = dataset[:, :5]
 y = dataset[:, 5]
-print(x.shape) #(95,6)
+print(x.shape) #(95,5)
 print(y.shape) #(95,)
 
 from sklearn.model_selection import train_test_split
@@ -77,14 +77,6 @@ print('loss: ', loss)
 
 b = np.array(range(96,105))
 size = 5
-
-def split_x(seq, size):
-    aaa = []
-    for i in range(len(seq) - size + 1):
-        subset = seq[i : (i+size)]
-        aaa.append(subset)
-    print(type(aaa))
-    return np.array(aaa)
 
 x_pred = split_x(b, size)
 # print(x_pred)

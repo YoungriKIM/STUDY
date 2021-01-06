@@ -21,14 +21,13 @@ x1_train, x1_val, x2_train, x2_val, y_train, y_val = train_test_split(x1_train, 
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, LSTM, concatenate
 
-x1_predict = x1_predict.reshape(1, 3)
-x2_predict = x2_predict.reshape(1, 3)
-
+#모델1 인풋
 input1 = Input(shape=(3,))
 dense1 = Dense(27, activation='relu')(input1)
 dense1 = Dense(18, activation='relu')(dense1)
 dense1 = Dense(9, activation='relu')(dense1)
 
+#모델2 인풋
 x1 = x1.reshape(x1.shape[0], x1.shape[1], 1) #(13, 3, 1)
 x2 = x2.reshape(x2.shape[0], x2.shape[1], 1) #(13, 3, 1)
 x1_predict = x1_predict.reshape(1, 3, 1) #(1, 3, 1)
@@ -39,11 +38,12 @@ lstm2 = LSTM(27, activation='relu')(input2)
 dense2 = Dense(18, activation='relu')(lstm2)
 dense2 = Dense(9, activation='relu')(dense1)
 
+#모델 병합
 merge1 = concatenate([dense1, dense2])
 middle = Dense(18)(merge1)
 middle = Dense(18)(middle)
 
-output1 = Dense(36)(middle)
+#모델 분기
 output1 = Dense(18)(middle)
 output1 = Dense(9)(output1)
 output1 = Dense(1)(output1)

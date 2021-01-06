@@ -25,7 +25,7 @@ print(dataset.shape) #(95, 6)
 
 x = dataset[:, :5]
 y = dataset[:, 5]
-print(x.shape) #(95,6)
+print(x.shape) #(95,5)
 print(y.shape) #(95,)
 
 from sklearn.model_selection import train_test_split
@@ -69,14 +69,6 @@ print('loss: ', loss)
 b = np.array(range(96,105))
 size = 5
 
-def split_x(seq, size):
-    aaa = []
-    for i in range(len(seq) - size + 1):
-        subset = seq[i : (i+size)]
-        aaa.append(subset)
-    print(type(aaa))
-    return np.array(aaa)
-
 x_pred = split_x(b, size)
 # print(x_pred)
 # print(x_pred.shape) #(5,5)
@@ -96,11 +88,11 @@ print('y_pred: ', y_pred)
 
 # 32-3
 # 603/1000
-# loss:  [0.07056814432144165, 0.24552099406719208]
-# y_pred:  [[101.440544]
-#  [102.44451 ]
-#  [103.44847 ]
-#  [104.452415]
-#  [105.456375]]
+# loss:  [8.77839511304046e-07, 0.0009021759033203125]
+# y_pred:  [[100.99862]
+#  [101.9986 ]
+#  [102.9986 ]
+#  [103.99858]
+#  [104.99857]]
 
-# LSTM이 더 빨리 끝나고 loss값도 낮지만, predict 값은 Dense가 더 가까움. 이 모델에서는 큰 차이 없어 보임
+# Dense가 더 좋아보임

@@ -46,7 +46,6 @@ merge1 = concatenate([dense1, dense2])
 middle = Dense(18)(merge1)
 middle = Dense(18)(middle)
 
-output1 = Dense(36)(middle)
 output1 = Dense(18)(middle)
 output1 = Dense(9)(output1)
 output1 = Dense(1)(output1)
