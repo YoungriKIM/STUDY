@@ -17,7 +17,8 @@ model.add(Dense(1))
 #시퀀셜이라서 맨 윗줄만 인풋을 써주고 다른 애들은 안써줘도 된다.
 
 #3. 컴파일, 훈련 / fit은 훈련시키는 것임
-model.compile(loss='mse', optimizer='adam') #컴퓨터가 알아 듣게 설정해 주는 것이 주는 것이 compile이다.
+model.compile(loss='mse', optimizer='adam')
+#컴퓨터가 알아 듣게 설정해 주는 것이 주는 것이 compile이다.
 #loss를 mse로 측정을 하고 그것을 위한 최적화는 adam을 써라 
 model.fit(x,y, epochs=100, batch_size=1) #epochs는 선을 그으면서 학습하는 횟수임 100번 하자
 #batch_size는 학습에 들어가는 데이터 사이즈임, 한 번에 몇개의 문제를 풀건지(사이즈가 클수록 빠르고 작을 수록 정확하다)
