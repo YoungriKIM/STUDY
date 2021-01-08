@@ -1,3 +1,5 @@
+import numpy as np
+
 c = np.array([[3,6,5,4,2]])
 
 print(c)            #[[3 6 5 4 2]]

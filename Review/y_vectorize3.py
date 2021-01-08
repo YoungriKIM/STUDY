@@ -1,3 +1,4 @@
+import numpy as np
 
 b = np.array([3,6,5,4,2])
 

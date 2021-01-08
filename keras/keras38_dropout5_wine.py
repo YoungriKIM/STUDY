@@ -1,5 +1,5 @@
-# hist를 이용하여 그래프를 그리시오.
-# loss, val_loss, acc, val_acc
+#실습 드랍아웃 적용
+# 23-3 파일 가져와서 씀
 
 from sklearn.datasets import load_wine
 
@@ -33,10 +33,21 @@ x_test = scaler.transform(x_test)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Dropout
+
+### a = [0.1, 0.2, 0.3]
+### b = [0.1, 0.2, 0.3]
+### c = [100, 200, 300]
+### d = ['relu', 'linear' 등 ]              > 이런식으로 지정해서 
+### model.add(Dense(c, activation=d))
+### model.add(Dropout(a))
+### model.add(Dense(c, activation=d))
+### model.add(Dropout(b))
+### model.add(Dense(c, activation=d))       > 이런 모델을 구성할 수도 있다. 그러면 경우의 수가 아주 많이 늘어난다.
 
 model = Sequential()
 model.add(Dense(120, activation='relu', input_shape=(13,)))
+model.add(Dropout(0.2))
 model.add(Dense(60))
 model.add(Dense(60))
 model.add(Dense(60))
@@ -51,7 +62,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 
 from tensorflow.keras.callbacks import EarlyStopping
 earlystopping = EarlyStopping(monitor='loss', patience=20, mode='min')
-hist = model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y_val), verbose=2, callbacks=earlystopping)
+model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y_val), verbose=2, callbacks=earlystopping)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test, batch_size=4)
@@ -66,18 +77,7 @@ print('y_test[-5:-1]_argmax: ', y_test[-5:-1].argmax(axis=1))
 # y_predict_argmax:  [0 2 0 1]
 # y_test[-5:-1]_argmax:  [0 2 0 1]
 
-
-# 그래프
-import matplotlib.pyplot as plt
-
-plt.plot(hist.history['loss'])
-plt.plot(hist.history['val_loss'])
-plt.plot(hist.history['acc'])
-plt.plot(hist.history['val_acc'])
-# plt.plot(x,y) 이걸 넣어도 들어간다
-
-plt.title('loss & acc')
-plt.ylabel('loss, acc')
-plt.xlabel('epoch')
-plt.legend(['loss', 'val loss', 'acc', 'val acc']) #그래프이름
-plt.show() 
+# 38-5 드랍아웃 적용 (로스가 올랐음 node가 너무 많이 줄어든 모양)
+# loss:  [0.1356738656759262, 0.9722222089767456]
+# y_predict_argmax:  [0 2 0 1]
+# y_test[-5:-1]_argmax:  [0 2 0 1]

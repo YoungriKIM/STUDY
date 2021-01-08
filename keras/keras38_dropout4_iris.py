@@ -1,4 +1,5 @@
-#tensorflow의 to_categorical 말고 sklearn 용으로 바꿀 것
+#실습 드랍아웃 적용
+#22-1 파일 가져와서 씀
 
 import numpy as np
 from sklearn.datasets import load_iris 
@@ -37,10 +38,11 @@ print(x.shape) #(150,4)
 print(y.shape) #(150,3)
 
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Dropout
 
 model = Sequential()
 model.add(Dense(120, activation='relu', input_shape=(4,)))
+model.add(Dropout(0.2))
 model.add(Dense(60))
 model.add(Dense(60))
 model.add(Dense(60))
@@ -67,3 +69,5 @@ print('y_test[-5:-1]: ', y_test[-5:-1])
 #======================= 22-1-2
 # loss:  [0.11083003133535385, 0.9666666388511658, 0.05501154810190201]
 
+# 38-4 드랍아웃 적용 (loss랑 mae는 조금 줄어들었음, acc는 동일함)
+# loss:  [0.1093134954571724, 0.9666666388511658, 0.03586991876363754]

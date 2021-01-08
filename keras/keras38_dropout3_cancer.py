@@ -1,18 +1,14 @@
-# 21-1의 predict 값이 소수점이 아니라 0.1 로 나오게 할 것
+#실습 드랍아웃 적용
 
 import numpy as np
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Dropout
 
 #1. 데이터 주고
 from sklearn.datasets import load_breast_cancer
 dataset = load_breast_cancer()
 x = dataset.data
 y = dataset.target
-
-# print(x.shape, y.shape) #(569, 30) (569,)
-# print('x[:5]: ',x[:5]) #전처리가 안 되어있음
-# print('y: ',y) #값이 0과 1로 이진분류임
 
 #전처리(y벡터화, 트레인테스트나누기, 민맥스스케일러)
 from tensorflow.keras.utils import to_categorical
@@ -34,8 +30,10 @@ x_test = scaler.transform(x_test)
 #모델 구성
 input1 = Input(shape=(30,))
 dense1 = Dense(120, activation='relu')(input1)
-dense1 = Dense(120)(dense1)
-dense1 = Dense(60)(dense1)
+dropout1 = Dropout(0.2)(dense1) # 이번에 붙인 부분
+dense1 = Dense(120)(dropout1)
+dropout1 = Dropout(0.2)(dense1)
+dense1 = Dense(60)(dropout1)
 dense1 = Dense(60)(dense1)
 dense1 = Dense(60)(dense1)
 output1 = Dense(2, activation='sigmoid')(dense1)
@@ -55,19 +53,19 @@ print('loss: ', loss)
 y_predict = model.predict(x_test[-5:-1])
 
 print('y_predict: ', y_predict)
-# [[1.0000000e+00 8.6358709e-10]
-#  [4.4308349e-02 9.5791960e-01]
-#  [1.0000000e+00 3.0873505e-08]
-#  [1.0034841e-02 9.9010718e-01]]
-
 print('y_predict_argmax: ', y_predict.argmax(axis=1)) #0이 열, 1이 행
-# [0 1 0 1]
 
 print('y_test[-5:-1]: ',y_test[-5:-1])
-# [[1. 0.]
-#  [0. 1.]
-#  [1. 0.]
-#  [0. 1.]]
+
 
 # print(y_predict.argmax(axis=1).shape) #(4,)
 # print(y_test[-5:-1].shape) #(4,2)
+
+# 21-2 드랍아웃 미적용
+# loss:  [0.31692570447921753, 0.9561403393745422]
+
+# 38-3 드랍아웃 한 번 적용(loss가 줄어서 더 좋아짐)
+# loss:  [0.15717896819114685, 0.9561403393745422]
+
+# 38-3 드랍아웃 두 번 적용 (더 좋아짐)
+# loss:  [0.117403045296669, 0.9736841917037964]
