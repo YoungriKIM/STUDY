@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 
 model = Sequential()
 model.add(Conv2D(filters = 10, kernel_size=(2,2), strides=1, padding='same', input_shape=(10,10,1))) #CNN은 4차원 인풋 받아서 아웃풋도 4차원 / LSTM은 3차원 받아서 2차원
-#  padding = 모서리 부분이 손해되니 한 번 감싸주겠다. 어떤걸로? 'same', 내가 준 이미지랑 같은 걸로 / 디폴트는 'valid'이다.
+#  padding = 모서리 부분이 손해되니 한 번 감싸주겠다. 내가 준 이미지랑 같은 걸로 / 디폴트는 'valid'이다.
 #  padding 의 목적은 다음으로 넘길 때 같은 크기로 주고 싶어서이다. 10,10이 인풋이고 원래 넘길 때는 9,9인데 패딩을 적용해서 10,10이 된다.
 #  strides = 몇칸씩 가느냐. 자르고 나서 몇 칸 띄워서 또 자를 건지. 디폴트는 1이다. (1,2)등도 가능하다.
 model.add(MaxPooling2D(pool_size=2)) #Maxpooling은 꼭 Conv 다음에 써야한다.
