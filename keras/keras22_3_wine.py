@@ -70,9 +70,14 @@ model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y
 loss = model.evaluate(x_test, y_test, batch_size=4)
 print('loss: ', loss)
 
-y_predict = model.predict(x_test[-5:-1])
-print('y_predict_argmax: ', y_predict.argmax(axis=1)) 
-print('y_test[-5:-1]_argmax: ', y_test[-5:-1].argmax(axis=1)) 
+# y_predict = model.predict(x_test[-5:-1])
+# print('y_predict_argmax: ', y_predict.argmax(axis=1)) 
+# print('y_test[-5:-1]_argmax: ', y_test[-5:-1].argmax(axis=1)) 
+
+
+
+
+
 
 # 22-3 Dense
 # loss:  [0.035107001662254333, 0.9722222089767456]

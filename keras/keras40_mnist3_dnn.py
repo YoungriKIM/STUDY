@@ -38,15 +38,15 @@ model.add(Dense(160, activation='relu'))
 model.add(Dense(80))
 model.add(Dense(80))
 model.add(Dense(40))
-model.add(Dense(10))
+model.add(Dense(10, activation = 'softmax'))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-stop = EarlyStopping(monitor='loss', patience=20, mode='min')
+stop = EarlyStopping(monitor='acc', patience=16, mode='max')
 
-model.fit(x_train, y_train, epochs=1000, batch_size=69, validation_split=0.2, verbose=2, callbacks=[stop])
+model.fit(x_train, y_train, epochs=100, batch_size=69, validation_split=0.2, verbose=1, callbacks=[stop])
 
 #. 평가, 예측
 loss = model.evaluate(x_test, y_test, batch_size=69)
@@ -60,6 +60,7 @@ print('y_test: ', y_test[:10].argmax(axis=1))
 # loss, acc:  0.009633197449147701 0.9853999743461609     137
 #
 # 40-3 mnist DNN       
-# loss:  0.003270471468567848
+# loss:  [0.10886456072330475, 0.9815000295639038]
 # y_pred:  [7 2 1 0 4 1 4 9 6 9]
 # y_test:  [7 2 1 0 4 1 4 9 5 9]
+
