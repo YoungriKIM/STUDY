@@ -2,62 +2,64 @@
 # DNN 모델으로 구성할 것 / (N, 28, 28) = (N ,28*28) = (N, 728) / input_shape = (28*28,)
 
 import numpy as np
-import matplotlib.pyplot as plt
 
-#1. 데이터
+#1. 데이터 불러오기
 from tensorflow.keras.datasets import mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# x 전처리
-x_train = x_train.reshape(60000, 28, 28).astype('float32')/255.          
-x_test = x_test.reshape(10000, 28, 28)/255.                            
- 
-# y 리쉐잎
-y_train = y_train.reshape(y_train.shape[0], 1)
-y_test = y_test.reshape(y_test.shape[0], 1)
+# print(x_train.shape, y_train.shape)     #(60000, 28, 28) (60000,)
+# print(x_test.shape, y_test.shape)       #(10000, 28, 28) (10000,)
 
-# y 벡터화 OneHotEncoding
-from sklearn.preprocessing import OneHotEncoder
-hot = OneHotEncoder()
-hot.fit(y_train)
-y_train = hot.transform(y_train).toarray()
-y_test = hot.transform(y_test).toarray()
+from tensorflow.keras.utils import to_categorical
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
+# print(y_train.shape, y_test.shape)      #(60000, 10) (10000, 10)
+
+x_train = x_train.reshape(x_train.shape[0], x_train.shape[1]*x_train.shape[2])
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1]*x_test.shape[2])
+
+# print(x_train.shape, x_test.shape)      #(60000, 784) (10000, 784)
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
 
 #2. 모델 구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
+from tensorflow.keras.layers import Dense, Dropout
 
 model = Sequential()
-model.add(Conv2D(filters=200, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
-model.add(MaxPooling2D(pool_size=2))
+model.add(Dense(200, input_shape=(784, ), activation='relu'))
 model.add(Dropout(0.2))
-model.add(Conv2D(100, 2, strides=1))
-model.add(Dropout(0.2))
-model.add(Flatten())
+model.add(Dense(160, activation='relu'))
+model.add(Dense(80))
+model.add(Dense(80))
+model.add(Dense(40))
 model.add(Dense(10))
 
-model.summary()
-
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['acc'])
+model.compile(loss='mse', optimizer='adam')
 
 from tensorflow.keras.callbacks import EarlyStopping
-stop = EarlyStopping(monitor='loss', patience=16, mode='max')
+stop = EarlyStopping(monitor='loss', patience=20, mode='min')
 
 model.fit(x_train, y_train, epochs=1000, batch_size=69, validation_split=0.2, verbose=2, callbacks=[stop])
 
-
-#4. 평가, 예측
-loss, acc = model.evaluate(x_test, y_test, batch_size=69)
-print('loss, acc: ', loss, acc)
+#. 평가, 예측
+loss = model.evaluate(x_test, y_test, batch_size=69)
+print('loss: ', loss)
 
 y_pred = model.predict(x_test[:10])
-
 print('y_pred: ', y_pred.argmax(axis=1))
 print('y_test: ', y_test[:10].argmax(axis=1))
 
-# 기록용
-# loss, acc:  0.0900002047419548 0.90000319480896        21
-# loss, acc:  0.021990319713950157 0.9539999961853027    17
-
-
+# 40-2 mnist CNN
+# loss, acc:  0.009633197449147701 0.9853999743461609     137
+#
+# 40-3 mnist DNN       
+# loss:  0.003270471468567848
+# y_pred:  [7 2 1 0 4 1 4 9 6 9]
+# y_test:  [7 2 1 0 4 1 4 9 5 9]

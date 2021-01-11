@@ -32,8 +32,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 
 model = Sequential()
-model.add(Conv2D(filters=300, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
-model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(filters=200, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
+model.add(MaxPooling2D(pool_size=3))
 model.add(Dropout(0.2))
 model.add(Conv2D(100, 2, strides=1))
 model.add(MaxPooling2D(pool_size=2))
@@ -50,9 +50,9 @@ model.summary()
 model.compile(loss='mse', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-stop = EarlyStopping(monitor='loss', patience=16, mode='max')
+stop = EarlyStopping(monitor='loss', patience=16, mode='min')
 
-model.fit(x_train, y_train, epochs=1000, batch_size=69, validation_split=0.2, verbose=2, callbacks=[stop])
+model.fit(x_train, y_train, epochs=1000, batch_size=69, validation_split=0.2, verbose=1, callbacks=[stop])
 
 
 #4. 평가, 예측
@@ -65,6 +65,9 @@ print('y_pred: ', y_pred.argmax(axis=1))
 print('y_test: ', y_test[:10].argmax(axis=1))
 
 # 기록용
+# 40-2 mnist CNN
 # loss, acc:  0.0900002047419548 0.90000319480896        21
 # loss, acc:  0.010415063239634037 0.9835000038146973     17
-
+# loss, acc:  0.009633197449147701 0.9853999743461609     137
+# y_pred:  [7 2 1 0 4 1 4 9 5 9]
+# y_test:  [7 2 1 0 4 1 4 9 5 9]
