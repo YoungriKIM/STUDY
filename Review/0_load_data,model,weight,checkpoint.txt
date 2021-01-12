@@ -1,0 +1,68 @@
+1.
+[데이터] 저장할 때 _ npy
+
+np.save('../data/npy/filename.npy', arr = x_data)
+np.save('../data/npy/filename.npy', arr = y_data)
+
+[데이터] 불러올 때 _ npy
+
+x = np.load('../data/npy/filename.npy')
+y = np.load('../data/npy/filename.npy')
+
+-------------------------
+2.
+[모델만] 저장할 때 _ h5
+: 모델구성 아래에 작성한다.
+
+model.save('../data/h5/filename.h5')
+
+[모델만] 불러올 때 _ h5
+: 모델구성부분만 대체할 수 있다.
+
+from tensorflow.keras.models import load_model
+model = load_model('../data/h5/filename.h5')
+
+-------------------------
+3.
+[모델, 컴파일, 훈련, w] 저장할 때 _ h5
+: fit 다음에 작성한다.
+
+model.save(''../data/h5/filename.h5')
+
+[모델, 컴파일, 훈련, w] 불러올 때 _ h5
+
+from tensorflow.keras.models import load_model
+model = load_model('../data/h5/filename.h5')
+
+-------------------------
+4.
+[모델, 훈련, w] 저장할 때 _ h5
+: fit 다음에 작성한다.
+
+model.save_weight('../data/h5/filename.h5')
+
+[모델, 훈련, w] 불러올 떄 _ h5
+: 컴파일은 있어야 함 주의
+
+model.load_weight('../data/h5/filename.h5')
+
+-------------------------
+5.
+내가 지정한 최고의 지점의 w와
+[모델, 컴파일, 훈련, w] 저장할 때 _ hdf5
+: fit 의 callbacks 에 적용한다.
+
+from tensorflow.keras.callbacks import ModelCheckpoint
+
+modelpath = '../data/modelcheckpoint/filename_{epoch:02d}-{val_loss:.4f}.hdf5'
+check = ModelCheckpoint(filepate=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+
+fit의 callbacks=[check]
+
+내가 지정한 최고의 지점의 w와
+[모델, 컴파일, 훈련, w] 불러올 때 _ hdf5
+: 3번의 모두 저장하는 save.model 과 비슷하지만 성능이 더 좋을 가능성이 높다.
+
+from tensorflow.keras.models import load_model
+
+model = load_model('../data/modelcheckpoint/filename.hdf5')

@@ -42,10 +42,10 @@ model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(18, activation='relu'))
-model.add(Dense(10))
+model.add(Dense(10, activation='softmax'))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer = 'adam', metrics=['acc'])
+model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
 stop = EarlyStopping(monitor='acc', patience=16, mode='max')

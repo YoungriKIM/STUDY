@@ -35,29 +35,29 @@ y_val = hot.transform(y_val).toarray()
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 
-model = Sequential()
-model.add(Conv2D(filters=120, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
-model.add(MaxPooling2D(pool_size=2))
-model.add(Dropout(0.2))
-model.add(Conv2D(100, 2, strides=1))
-model.add(MaxPooling2D(pool_size=2))
-model.add(Dropout(0.2))
-model.add(Conv2D(80, 2, strides=1))
-model.add(Flatten())
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(30))
-model.add(Dense(10, activation='softmax'))
+# model = Sequential()
+# model.add(Conv2D(filters=120, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
+# model.add(MaxPooling2D(pool_size=2))
+# model.add(Dropout(0.2))
+# model.add(Conv2D(100, 2, strides=1))
+# model.add(MaxPooling2D(pool_size=2))
+# model.add(Dropout(0.2))
+# model.add(Conv2D(80, 2, strides=1))
+# model.add(Flatten())
+# model.add(Dense(60))
+# model.add(Dense(60))
+# model.add(Dense(60))
+# model.add(Dense(30))
+# model.add(Dense(10, activation='softmax'))
 
 # 모델 세이브를 하자. 모델이 끝난 지점에서 하면 모델만 저장된다.
 # model.save('../data/h5/k52_1_model1.h5')
 
 
 #3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+# from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 # modelpath = '../data/modelcheckpoint/k52_1_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'  #로 생성된 가장 마지막 파일 이름을 아래로 바꿔줌 
 # k52_1_MCK_{val_loss:.4f}.hdf5
 # d =  정수형으로 10의 자리까지 /f = float 실수형으로 소수 4번째까지 하겠다. ##이부분 찾아보기
@@ -80,13 +80,13 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 #---------------------------------------------------------
 
-model.load_weights('../data/h5/k52_1_weight.h5')
+# model.load_weights('../data/h5/k52_1_weight.h5')
 # 52-1에서 불러온 w로 평가 예측을 할 것이다. fit이 필요가 없다. 하지만 모델과 컴파일은 저장되지 않았다.
 
 #4-2. 평가, 예측
-result = model.evaluate(x_test, y_test, batch_size=8)
-print('가중치_loss: ', result[0])
-print('가중치_acc: ', result[1])
+# result = model.evaluate(x_test, y_test, batch_size=8)
+# print('가중치_loss: ', result[0])
+# print('가중치_acc: ', result[1])
 
 # w가 준비되어 있어서 바로 결과가 나온다.
 # 가중치_loss:  0.05850084125995636
@@ -103,3 +103,17 @@ print('가중치_acc: ', result[1])
 # w 값이 같아서 위와 같은 값이 나온다.
 # 로드모델_loss:  0.05850084125995636
 # 로드모델_acc:  0.982200026512146
+
+#---------------------------------------------------------
+
+model = load_model('../data/modelcheckpoint/k52_1_mnist_checkpoint.hdf5')
+result = model.evaluate(x_test, y_test, batch_size=8)
+print('로드체크포인트_loss: ', result[0])
+print('로드체크포인트_acc: ', result[1])
+
+# 모델까지 저장되어 있어서 모델이 없어도 돌아가는 것을 알 수 있다.
+# 체크포인트는 loss가 가장 낮은 지점이기 때문에 예측값이 더 좋다.
+# 위 2개의 로드들은 얼리스탑핑으리 통해 최적의 지점을 지났기 때문이다.
+# 로드체크포인트_loss:  0.045716542750597
+# 로드체크포인트_acc:  0.9853000044822693
+

@@ -44,7 +44,7 @@ flat1 = Flatten()(conv1)
 dense1 = Dense(60)(flat1)
 dense1 = Dense(60)(dense1)
 dense1 = Dense(60)(dense1)
-output1 = Dense(2)(dense1)
+output1 = Dense(2, activation='sigmoid')(dense1)
 model = Model(inputs = input1, outputs = output1)
 
 #####

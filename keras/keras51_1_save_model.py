@@ -48,7 +48,7 @@ model.add(Dense(60))
 model.add(Dense(30))
 model.add(Dense(10, activation='softmax'))
 
-# 모델 세이브를 하자. 모델이 끝난 지점에서 하면 모델만 저장된다.
+# 모델이 끝난 지점에서 하면 모델만 저장된다.
 model.save('../data/h5/k51_1_model1.h5')
 
 

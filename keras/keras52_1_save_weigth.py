@@ -48,7 +48,7 @@ model.add(Dense(60))
 model.add(Dense(30))
 model.add(Dense(10, activation='softmax'))
 
-# 모델 세이브를 하자. 모델이 끝난 지점에서 하면 모델만 저장된다.
+# 모델이 끝난 지점에서 하면 모델만 저장된다.
 model.save('../data/h5/k52_1_model1.h5')
 
 
@@ -65,55 +65,11 @@ mc = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True
 
 hist = model.fit(x_train, y_train, epochs=30, batch_size=28, validation_data=(x_val, y_val), verbose=1, callbacks=[stop, mc])
 
-# 모델 세이브를 컴파일, 훈련 뒤에 하면 w값까지 저장된다.
-model.save('../data/h5/k52_1_model2.h5')
+model.save('../data/h5/k52_1_model2.h5') # 모델 세이브를 컴파일, 훈련 뒤에 하면 w값까지 저장된다.
 model.save_weights('../data/h5/k52_1_weight.h5')
 
 
-
-#4. 평가, 예측
-loss, acc = model.evaluate(x_test, y_test, batch_size=28)
-print('loss, acc: ', loss, acc)
-
-y_pred = model.predict(x_test[:10])
-
-# print('y_pred: ', y_pred.argmax(axis=1))
-# print('y_test: ', y_test[:10].argmax(axis=1))
-
-# 시각화
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(10, 6))    
-
-plt.subplot(2, 1, 1)            #2행 1열 중 첫 번쨰 그래프
-plt.plot(hist.history['loss'], marker='.', c='red', label='loss')    #loss로 그리고 점형태로 찍을거고 색은 레드고 라벨은 로스
-plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
-plt.grid()      #바탕을 모눈종이 형태로 표현하겠다
-
-plt.title('Cost Loss')       # 손실비용
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(loc='upper right')       # loc = location / upper right = 오른쪽 위에 / 내가 명시해준 라벨을 표시해줌
-
-plt.subplot(2, 1, 2)            #2행 2열 중 두 번쨰 그래프
-plt.plot(hist.history['acc'], marker='.', c='red')    #loss로 그리고 점형태로 찍을거고 색은 레드고 라벨은 로스
-plt.plot(hist.history['val_acc'], marker='.', c='blue')
-plt.grid()
-
-plt.title('Accuracy')       #정확도
-plt.ylabel('acc')
-plt.xlabel('epoch')
-plt.legend(['acc', 'val_acc'])
-
-plt.show()
-
-
-
-#===================
-# 기록용
-# 40-2 mnist CNN
-# loss, acc:  0.0900002047419548 0.90000319480896        21
-# loss, acc:  0.010415063239634037 0.9835000038146973     17
-# loss, acc:  0.009324220940470695 0.9854999780654907     69
-# # y_pred:  [7 2 1 0 4 1 4 9 5 9]
-# y_test:  [7 2 1 0 4 1 4 9 5 9]
+#4-1. 평가, 예측
+result = model.evaluate(x_test, y_test, batch_size=8)
+print('model_loss: ', result[0])
+print('model_acc: ', result[1])

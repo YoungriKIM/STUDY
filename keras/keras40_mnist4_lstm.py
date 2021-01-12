@@ -40,13 +40,13 @@ dense1 = Dense(12)(lstm1)
 drop1 = Dropout(0.2)(dense1)
 dense1 = Dense(12)(drop1)
 dense1 = Dense(12)(dense1)
-output1 = Dense(10)(dense1)
+output1 = Dense(10, activation='softmax')(dense1)
 model = Model(inputs = input1, outputs = output1)
 
 # model.summary()
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
 stop = EarlyStopping(monitor='loss', patience=16, mode='min')
