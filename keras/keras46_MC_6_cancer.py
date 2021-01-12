@@ -47,7 +47,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 stop = EarlyStopping(monitor='loss', patience=10, mode='min')
 
-modelpath = './ModelCheckPoint/k46_6_cancer_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_6_cancer_{epoch:02d}-{val_loss:.4f}.hdf5'
 stop = EarlyStopping(monitor='val_loss', patience=5, mode='min') #monitor=val_loss도 가능, 그냥 loss보다 val_loss를 신뢰하기도 한다.
 mc = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 

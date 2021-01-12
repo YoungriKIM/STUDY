@@ -77,7 +77,7 @@ stop = EarlyStopping(monitor='val_loss', patience=5, mode='min')
 # modelpath = './ModelCheckPoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
 # mc = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 
-tb = TensorBoard(log_dir='./graph', histogram_freq=0, write_graph=True, write_images=True)
+tb = TensorBoard(log_dir='../data/graph', histogram_freq=0, write_graph=True, write_images=True)
 #'graph' 도 된다.
 #텐서보드의 파라미터 정리하기
 

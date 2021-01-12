@@ -42,7 +42,7 @@ model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['acc
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 stop = EarlyStopping(monitor='val_loss', patience=5, mode='auto')
 
-modelpath = './ModelCheckPoint/k46_2_cifar10_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_2_cifar10_{epoch:02d}-{val_loss:.4f}.hdf5'
 mc= ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 
 hist = model.fit(x_train, y_train, epochs=100, batch_size=36, validation_data=(x_val, y_val), verbose=1, callbacks=[stop, mc])
@@ -57,6 +57,9 @@ print('loss:' ,loss)
 
 #시각화
 import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = 'Malgun Gothic'
+plt.rcParams["font.size"] = 10
 
 plt.figure(figsize=(18,6))
 

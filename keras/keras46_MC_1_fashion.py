@@ -42,7 +42,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 stop = EarlyStopping(monitor='val_loss', patience=10, mode='auto')
 
-modelpath = './ModelCheckPoint/k46_1_fashion_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_1_fashion_{epoch:02d}-{val_loss:.4f}.hdf5'
 mc = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='min')
 
 hist = model.fit(x_train, y_train, epochs=10, batch_size=56, validation_data=(x_val, y_val), verbose=1, callbacks=[stop, mc])

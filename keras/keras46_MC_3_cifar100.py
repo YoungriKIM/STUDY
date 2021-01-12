@@ -56,7 +56,7 @@ model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['acc
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 stop = EarlyStopping(monitor='val_loss', patience=10, mode='min')
 
-modelpath = './ModelCheckPoint/k46_3_cifar100_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_3_cifar100_{epoch:02d}-{val_loss:.4f}.hdf5'
 mc = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 
 hist = model.fit(x_train, y_train, epochs=300, batch_size=18, validation_data=(x_val, y_val), verbose=1, callbacks=[stop, mc])

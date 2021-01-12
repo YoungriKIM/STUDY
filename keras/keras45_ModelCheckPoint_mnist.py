@@ -56,7 +56,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
-modelpath = './ModelCheckPoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
 # d =  정수형으로 10의 자리까지 /f = float 실수형으로 소수 4번째까지 하겠다. ##이부분 찾아보기
 
 stop = EarlyStopping(monitor='val_loss', patience=10, mode='min') #monitor=val_loss도 가능, 그냥 loss보다 val_loss를 신뢰하기도 한다.
@@ -92,17 +92,18 @@ plt.grid()      #바탕을 모눈종이 형태로 표현하겠다
 plt.title('Cost Loss')       # 손실비용
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.legend(loc='upper right')
+plt.legend(loc='upper right')       # loc = location / upper right = 오른쪽 위에 / 내가 명시해준 라벨을 표시해줌
 
 plt.subplot(2, 1, 2)            #2행 2열 중 두 번쨰 그래프
-plt.plot(hist.history['acc'], marker='.', c='red', label='acc')    #loss로 그리고 점형태로 찍을거고 색은 레드고 라벨은 로스
-plt.plot(hist.history['val_acc'], marker='.', c='blue', label='val_acc')
+plt.plot(hist.history['acc'], marker='.', c='red')    #loss로 그리고 점형태로 찍을거고 색은 레드고 라벨은 로스
+plt.plot(hist.history['val_acc'], marker='.', c='blue')
 plt.grid()
 
 plt.title('Accuracy')       #정확도
 plt.ylabel('acc')
 plt.xlabel('epoch')
-plt.legend(loc='upper right')
+plt.legend(['acc', 'val_acc'])
+ # 위랑 비교했을 때 이렇게 레전드에 직접 이름을 넣어줄 수 있다. 또한 위치를 지정하지 않으면 알아서 비어있는 공간으로 들어간다.
 
 plt.show()
 

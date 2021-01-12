@@ -1,3 +1,5 @@
+#데이터를 넘파이형태로 저장해보자
+
 import numpy as np
 import tensorflow as tf
 
