@@ -1,26 +1,12 @@
+# Conv1D로 바꾸시오 그리고 비교하시오
+
 from sklearn.datasets import load_wine
 
 #1. 데이터 주기
 dataset = load_wine()
 
-# 데이터를 받으면 꼭 확인해볼 것!
-# print(dataset.DESCR)
-# print(dataset.feature_names)
-'''
-:Number of Instances: 178 (50 in each of three classes)
-    :Number of Attributes: 13 numeric, predictive attributes and the class  >> 13열인 걸 알 수 있음
-    - class:
-            - class_0
-            - class_1
-            - class_2   > 다중분류임
-'''
-
 x = dataset.data
 y = dataset.target
-# print(x.shape) #(178, 13)
-# print(y.shape) #(178,)
-# print(x) #전처리가 안 된 것을 확인
-# print(y) #순서대로 다중분류되어있으니 셔플을 해야 함
 
 # 나누고
 from sklearn.model_selection import train_test_split
@@ -44,27 +30,31 @@ x_train = scaler.transform(x_train)
 x_val = scaler.transform(x_val)
 x_test = scaler.transform(x_test)
 
+x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
+x_val = x_val.reshape(x_val.shape[0], x_val.shape[1], 1)
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
+
 #2. 모델구성
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D
 
 model = Sequential()
-model.add(Dense(120, activation='relu', input_shape=(13,)))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(60))
-model.add(Dense(30))
-model.add(Dense(30))
-model.add(Dense(30))
+model.add(Conv1D(filters=48, kernel_size=2, input_shape=(13, 1), activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Conv1D(36, 1))
+model.add(Conv1D(36, 1))
+model.add(Flatten())
+model.add(Dense(24))
+model.add(Dense(12))
+model.add(Dense(12))
 model.add(Dense(3, activation='softmax'))
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='loss', patience=20, mode='min')
-model.fit(x_train, y_train, epochs=1000, batch_size=8, validation_data=(x_val, y_val), verbose=2, callbacks=earlystopping)
+earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min')
+model.fit(x_train, y_train, epochs=200, batch_size=8, validation_data=(x_val, y_val), verbose=2, callbacks=earlystopping)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test, batch_size=4)
@@ -80,3 +70,6 @@ print('y_test[-5:-1]_argmax: ', y_test[-5:-1].argmax(axis=1))
 # loss:  [0.035107001662254333, 0.9722222089767456]
 # y_predict_argmax:  [0 2 0 1]
 # y_test[-5:-1]_argmax:  [0 2 0 1]
+
+# 54-6 conv1d
+# loss:  [0.061490338295698166, 0.9722222089767456]

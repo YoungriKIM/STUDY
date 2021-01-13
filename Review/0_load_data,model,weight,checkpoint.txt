@@ -9,6 +9,8 @@ np.save('../data/npy/filename.npy', arr = y_data)
 x = np.load('../data/npy/filename.npy')
 y = np.load('../data/npy/filename.npy')
 
+용량이 아주 큰 csv파일을 npy로 저장해서 불러오면 더 빠르게 작업이 가능하다.
+
 -------------------------
 2.
 [모델만] 저장할 때 _ h5
