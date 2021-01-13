@@ -65,20 +65,39 @@ x_val = x_val.reshape(x_val.shape[0], x_val.shape[1], 1)
 x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 x_pred = x_pred.reshape(x_pred.shape[0], x_pred.shape[1], 1)
 
-print(x_train.shape)        #(421, 8, 1)
-print(x_val.shape)          #(106, 8, 1)
-print(x_test.shape)         #(132, 8, 1)
-print(x_pred.shape)         #(1, 8, 1)
+# print(x_train.shape)        #(421, 8, 1)
+# print(x_val.shape)          #(106, 8, 1)
+# print(x_test.shape)         #(132, 8, 1)
+# print(x_pred.shape)         #(1, 8, 1)
+
+np.save('../data/npy/samsung_x_train.npy', arr=x_train)
+np.save('../data/npy/samsung_y_train.npy', arr=y_train)
+np.save('../data/npy/samsung_x_val.npy', arr=x_val)
+np.save('../data/npy/samsung_y_val.npy', arr=y_val)
+np.save('../data/npy/samsung_x_test.npy', arr=x_test)
+np.save('../data/npy/samsung_y_test.npy', arr=y_test)
+np.save('../data/npy/samsung_x_pred.npy', arr=x_pred)
 
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D
+from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D, LSTM
+
 
 model = Sequential()
-model.add(Conv1D(filters = 128, kernel_size = 3, strides=1, padding = 'same', input_shape = (8,1), activation='relu'))
+model.add(Conv1D(filters = 304, kernel_size = 7, strides=1, padding = 'same', input_shape = (8,1), activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Conv1D(128, 2, activation='relu'))
+model.add(Conv1D(40, 2, activation='relu'))
+model.add(Conv1D(40, 2, activation='relu'))
 model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dense(56, activation='relu'))
+model.add(Dense(56, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(1))
+
+# model.summary()
 
 
 #3. 컴파일, 핏
@@ -87,13 +106,23 @@ model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 stop = EarlyStopping(monitor='val_loss', patience=16, mode='min')
 
-model.fit(x_train, y_train, epochs=100, batch_size=4, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])
+# modelpath = '../data/modelcheckpoint/samsung_{epoch:02d}-{val_loss:.4f}.hdf5'
+# check = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+
+model.fit(x_train, y_train, epochs=1, batch_size=1, validation_data=(x_val, y_val), verbose=1, callbacks=[stop]) #, check])
 
 
 #4. 평가, 예측
-result = model.evaluate(x_test, y_test, batch_size=4)
+result = model.evaluate(x_test, y_test, batch_size=1)
 print('mse: ', result[0])
 print('mae: ', result[1])
 
 y_pred = model.predict(x_pred)
 print('1/14일 삼성주식 종가: ', y_pred)
+
+
+#========= 기록용
+# 30
+# mse:  1395805.875
+# mae:  804.3372192382812
+# 1/14일 삼성주식 종가:  [[91486.96]]
