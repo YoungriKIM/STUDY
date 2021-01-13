@@ -2,15 +2,12 @@ import numpy as np
 import pandas as pd
 
 # 데이터 불러옴
-df = pd.read_csv('../data/csv/ss_data.csv', index_col=0, header=0, encoding='cp949') 
+df = pd.read_csv('../data/csv/ss_data.csv', index_col=0, header=0, encoding='cp949', thousands=',') 
 # print(df)
 
 # 데이터 순서 역으로
 df2 = df.iloc[::-1].reset_index(drop=True)
 # print(df2)  (2400, 14)
-
-df2.fillna(value=)
-df2['종가'] = df2['종가'].astype(np.int64)
 
 print(df2.info())
 
