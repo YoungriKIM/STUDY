@@ -1,6 +1,6 @@
 # predcit1은 액면분할 한 후만 데이터에 넣었음
 # predict2에 액면분할 하기 전도 넣어보기 > RNN으로 구성
-
+# predict3 : 1/14일치를 추가하여 1/15일 종가를 맞추자
 
 import numpy as np
 import pandas as pd
@@ -30,42 +30,44 @@ df2 = df.iloc[::-1].reset_index(drop=True)
 df2 = df2.where(pd.notnull(df2), df2.mean(), axis='columns')     # 결측치에 변수의 평균으로 대체
 
 df3 = df2.iloc[0:1737, [0,1,2,3]]/50        # 액면 분할 전에 /50해서 데이터 합치기
-df4 = df2.iloc[1738: , [0,1,2,3]]
+df4 = df2.iloc[1738:-1 , [0,1,2,3]]
 df5 = pd.concat([df3, df4])
 df6 = df2.iloc[0:1737, [9, 10, 11, 12]]
-df7 = df2.iloc[1738: , [9, 10, 11, 12]]
+df7 = df2.iloc[1738:-1 , [9, 10, 11, 12]]
 df8 = pd.concat([df6, df7])
 df9 = pd.concat([df5, df8], axis=1)
 
-# print(df9.info())
-# print(df9.head())
-# print(df9.tail())
-# print(df9.describe())
+# print(df9.info())       #2399 > 2398 1/14일 없앰
+
+####
+# 1/14~15 붙이기
+dfadd = pd.read_csv('../data/csv/ss_data_2.csv', index_col=0, header=0, encoding='cp949', thousands=',') 
+
+# 데이터 순서 역으로
+dfadd = dfadd.iloc[::-1].reset_index(drop=True)
+dfadd_data = dfadd.iloc[58:, [0,1,2,3,11,12,13,14]]
+df0114 = pd.concat([df9, dfadd_data]).reset_index(drop=True)
+
+# print(df0114.shape)     #(2400, 8)
+# print(df0114.tail())
+# 사용 할 칼럼 : 시가0 / 고가1 / 저가2 / 종가3 / 기관11 / 외인(수량)12 / 외국계13 / 프로그램14
 
 
 # x, y 데이터 지정
 # 액면분할 시점 : 1740
-x = df2.iloc[1800:2399, [0,1,2,3,4,5,6,7]]
-y = df2.iloc[1801:2400, 3]
-x_pred = df2.iloc[2399, [0,1,2,3,4,5,6,7]]
-
+x = df0114.iloc[1810:2399, [0,1,2,3,4,5]]
+y = df0114.iloc[1811:2400, 3]
+x_pred = df0114.iloc[2399, [0,1,2,3,4,5]]
 
 
 # 전처리: 2) minmax / 1) traintestsplit / 3) x 3차원 변환
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=311)
-
 from sklearn.model_selection import train_test_split
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=0.8, shuffle=True, random_state=311)
 
-# print(x_train.shape)    #(1535, 8)
-# print(x_val.shape)      #(384, 8)
-# print(x_test.shape)     #(480, 8)
-
 x_pred = x_pred.values.reshape(1,-1)
-# print(x_pred.shape)      # (1, 8)
-
 
 from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
@@ -75,33 +77,32 @@ x_val = scaler.transform(x_val)
 x_test = scaler.transform(x_test)
 x_pred = scaler.transform(x_pred)
 
-x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
-x_val = x_val.reshape(x_val.shape[0], x_val.shape[1], 1)
-x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
-x_pred = x_pred.reshape(x_pred.shape[0], x_pred.shape[1], 1)
+x_train = x_train.reshape(x_train.shape[0], x_train.shape[1])
+x_val = x_val.reshape(x_val.shape[0], x_val.shape[1])
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1])
+x_pred = x_pred.reshape(x_pred.shape[0], x_pred.shape[1])
 
-# print(x_train.shape)        #(1535, 8, 1)
-# print(x_val.shape)          #(384, 8, 1)
-# print(x_test.shape)         #(480, 8, 1)
-# print(x_pred.shape)         #(1, 8, 1)
-
-# np.save('../data/npy/samsung_x_train.npy', arr=x_train)
-# np.save('../data/npy/samsung_y_train.npy', arr=y_train)
-# np.save('../data/npy/samsung_x_val.npy', arr=x_val)
-# np.save('../data/npy/samsung_y_val.npy', arr=y_val)
-# np.save('../data/npy/samsung_x_test.npy', arr=x_test)
-# np.save('../data/npy/samsung_y_test.npy', arr=y_test)
-# np.save('../data/npy/samsung_x_pred.npy', arr=x_pred)
-
+# np.save('../data/npy/samsung2_total.npy', arr=[x_train, y_train, x_val, y_val, x_test, y_test, x_pred])
 
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D, LSTM, GRU, LeakyReLU
+from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D, LSTM, LeakyReLU, GRU
+
 
 model = Sequential()
-model.add(LSTM(16, input_shape=(x_train.shape[1], x_train.shape[2]), activation='relu', return_sequences=False))
+model.add(Dense(128, input_shape=(x_train.shape[1],), activation='relu'))
+model.add(Dense(128))
+model.add(Dense(96))
+model.add(Dense(96))
+model.add(Dense(64))
+model.add(Dense(32))
+model.add(Dense(24))
+model.add(Dense(16))
+model.add(Dense(8))
+model.add(Dense(2))
 model.add(Dense(1))
+model.add(LeakyReLU())
 
 
 #3. 컴파일, 핏
@@ -110,13 +111,12 @@ model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 stop = EarlyStopping(monitor='val_loss', patience=16, mode='min')
 
-# modelpath = '../data/modelcheckpoint/samsung_{epoch:02d}-{val_loss:.4f}.hdf5'
+# modelpath = '../data/modelcheckpoint/samsung2_{epoch:02d}-{val_loss:08f}.hdf5'
 # check = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 
-hist = model.fit(x_train, y_train, epochs=20, batch_size=8, validation_data=(x_val, y_val), verbose=1, callbacks=[stop]) #, check])
+hist = model.fit(x_train, y_train, epochs=10, batch_size=2, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])#, check])
 
 
-#4. 평가, 예측
 #4. 평가, 예측
 result = model.evaluate(x_test, y_test, batch_size=2)
 print('mse: ', format(result[0], ','))
@@ -129,7 +129,7 @@ y_pred3 = float(y_pred2)            # 소수형으로
 y_pred4 = format(y_pred3, ',')      # 천의자리에 콤마 넣기
 
 print(y_pred4)
-print('1/14일 삼성주식 종가는', y_pred4, '입니다.')
+print('1/15일 삼성주식 종가는', y_pred4, '입니다.')
 
 
 '''
@@ -146,10 +146,27 @@ plt.legend(['loss', 'val_loss'])
 plt.show()
 '''
 
+# 0114
+# mse:  1462815.125
+# mae:  828.123779296875
+# 1/15일 삼성주식 종가:  [[89735.6]]
 
-# 기록용
-# mse:  2593442.75
-# mse:  1649276.75
-# mse:  1258485.0
-# mse:  1285734.875
+# 0115 prdict4
+# mse:  2474566400.0
+# mse:  1819729.5
+# mse:  1504858.375
+# mse:  1711754.75
+# mse:  1515843.125
+# mse:  1506327.25
+# 특성 7개  mse:  1,766,768.125    
+# 특성 6개  mse:  1,228,224.125    1800~
+# 특성 5개  mse:  1,617,932.625
+# mse:  1,378,699.875
+# mse:  1,152,403.125
+# mse:  1,182,029.75
+# mse:  1,093,494.75
 
+# mse:  916,492.625
+# mae:  728.7837524414062
+# 91,452.90625
+# 1/15일 삼성주식 종가는 91,452.90625 입니다.
