@@ -53,9 +53,9 @@ df0114 = pd.concat([df9, dfadd_data]).reset_index(drop=True)
 
 # x, y 데이터 지정
 # 전체데이터 2401 
-x = df0114.iloc[99:2399, [0,1,2,3,4,5]]          #(2300, 6)
-y = df0114.iloc[101:2401, 0]                     #(2300,)
-x_pred = df0114.iloc[-3:-1, [0,1,2,3,4,5]]       #(2, 6)
+x = df0114.iloc[1499:2399, [0,1,2,3]]          #(2300, 6)
+y = df0114.iloc[1501:2401, 0]                     #(2300,)
+x_pred = df0114.iloc[-3:-1, [0,1,2,3]]       #(2, 6)
 
 print(x.shape)
 print(y.shape)
@@ -81,10 +81,10 @@ y_val = y_val.values.reshape(-1,1)
 y_test = y_test.values.reshape(-1,1)
 
 a=2
-x_train = x_train.reshape(int(x_train.shape[0]/a), x_train.shape[1]*a)
-x_val = x_val.reshape(int(x_val.shape[0]/a), x_val.shape[1]*a)
-x_test = x_test.reshape(int(x_test.shape[0]/a), x_test.shape[1]*a)
-x_pred = x_pred.reshape(int(x_pred.shape[0]/a), x_pred.shape[1]*a)
+x_train = x_train.reshape(int(x_train.shape[0]/a), x_train.shape[1]*a,1)
+x_val = x_val.reshape(int(x_val.shape[0]/a), x_val.shape[1]*a,1)
+x_test = x_test.reshape(int(x_test.shape[0]/a), x_test.shape[1]*a,1)
+x_pred = x_pred.reshape(int(x_pred.shape[0]/a), x_pred.shape[1]*a,1)
 
 y_train = y_train.reshape(int(y_train.shape[0]/a), 1*a)
 y_val = y_val.reshape(int(y_val.shape[0]/a), 1*a)
@@ -111,13 +111,26 @@ y_test = y_test.reshape(int(y_test.shape[0]/a), 1*a)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D, LSTM, LeakyReLU, GRU
-
+from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, Flatten, MaxPooling1D, LSTM, LeakyReLU, GRU, SimpleRNN
 
 model = Sequential()
-model.add(Dense(32, input_shape=(x_train.shape[1],), activation='relu'))
+
+# model.add(SimpleRNN(16, input_shape=(x_train.shape[1],1), activation='relu', return_sequences=False))
+# model.add(GRU(16, input_shape=(x_train.shape[1],1), activation='relu', return_sequences=False))
+# model.add(LSTM(16, input_shape=(x_train.shape[1],1), activation='relu', return_sequences=False))
+
+model = Sequential()
+model.add(Conv1D(filters = 40, kernel_size = 2, strides=1, padding = 'same', input_shape=(x_train.shape[1],1), activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Conv1D(16, 2, padding='same'))
+model.add(Conv1D(16, 2, padding='same'))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Flatten())
+model.add(Dense(8))
+model.add(Dense(8))
+
 model.add(Dense(2))
-model.add(LeakyReLU())
+
 
 
 #3. 컴파일, 핏
@@ -129,11 +142,11 @@ stop = EarlyStopping(monitor='val_loss', patience=16, mode='min')
 # modelpath = '../data/modelcheckpoint/samsung2_{epoch:02d}-{val_loss:08f}.hdf5'
 # check = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 
-hist = model.fit(x_train, y_train, epochs=1, batch_size=1, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])#, check])
+hist = model.fit(x_train, y_train, epochs=20, batch_size=6, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])#, check])
 
 
 #4. 평가, 예측
-result = model.evaluate(x_test, y_test, batch_size=1)
+result = model.evaluate(x_test, y_test, batch_size=6)
 print('mse: ', format(result[0], ','))
 print('mae: ', format(result[1], ','))
 
