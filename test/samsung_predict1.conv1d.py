@@ -33,18 +33,19 @@ print(df2.info())
 
 # 상관계수 확인
 
-# print(df2.corr())
+print(df2.corr())
 
-# import matplotlib.pyplot as plt
-# import seaborn as sns
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# sns.set(font_scale=0.6, font='Malgun Gothic', rc={'axes.unicode_minus':False})
-# sns.heatmap(data=df.corr(), square=True, annot=True, cbar=True) 
-# plt.show()
+sns.set(font_scale=0.6, font='Malgun Gothic', rc={'axes.unicode_minus':False})
+sns.heatmap(data=df.corr(), square=True, annot=True, cbar=True) 
+plt.show()
 
 # 사용 할 칼럼 : 시가0 / 고가1 / 저가2 / 종가3 / 등락률4 / 금액6 / 신용비7 / 기관9
 
 
+'''
 # x, y 데이터 지정
 x = df2.iloc[1740:2399, [0,1,2,3,4,6,7,9]]
 y = df2.iloc[1741:2400, 3]
@@ -146,3 +147,4 @@ print('1/14일 삼성주식 종가: ', y_pred)
 # mae:  825.32763671875
 # 1/14일 삼성주식 종가:  [[90572.59]]
 
+'''
