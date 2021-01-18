@@ -1,1 +1,0 @@
-오늘 할 일: 앙상블 / for문 / float, int 정리 / 짧은 conv2d 구성 / 
