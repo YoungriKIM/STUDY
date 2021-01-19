@@ -8,23 +8,20 @@ dataset = np.transpose(dataset)
 print(dataset.shape)    #(8, 5)
 print(type(dataset))    #<class 'numpy.ndarray'>
 
-def split_xy1(dataset, x_row, x_col, y_row, y_col):
+aaa = dataset
+
+def split_xy(aaa, x_row, x_col, y_row, y_col):
     x, y = list(), list()
-    for i in range(len(dataset)):
-        x_start_number = i
-        x_end_number = i + x_row
-        y_start_number = x_end_number
-        y_end_number = y_start_number + y_row
-    
-        if i > x_row-1:
+    for i in range(len(aaa)):
+        if i > int(len(aaa)/y_row)-1:
             break
-        tmp_x = dataset[x_start_number : x_end_number, :x_col]
-        tmp_y = dataset[y_start_number : y_end_number, x_col:x_col+y_col]
+        tmp_x = aaa[i:i+x_row, :x_col]
+        tmp_y = aaa[i+x_row:i+x_row+y_row, x_col:]
         x.append(tmp_x)
         y.append(tmp_y)
     return np.array(x), np.array(y)
 
-x, y = split_xy1(dataset,2,3,4,2)
+x, y = split_xy(dataset,2,3,3,2)
 print(x, '\n\n', y)
 print(x.shape)
 print(y.shape)
