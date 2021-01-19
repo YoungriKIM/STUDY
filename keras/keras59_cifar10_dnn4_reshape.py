@@ -1,10 +1,14 @@
+# 다차원 댄스모델 만들기
+# (n,32,32,3) > 리쉐이프 레이어 사용해서 (n,32,32,3)
+
 import numpy as np
 from tensorflow.keras.datasets import cifar10   #10가지로 분류하는것. cifar100은 100개로 분류
 
 #1. 데이터
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-# print(x_train.shape, y_train.shape)     #(50000, 32, 32, 3) (50000, 1)
+print(x_train.shape, y_train.shape)     #(50000, 32, 32, 3) (50000, 10)
+
 
 #전처리 // 3) y벡터화 / 2) x minmax / 1) x traintest 분리
 
@@ -22,10 +26,6 @@ x_train = x_train.astype('float32')/255.
 x_val = x_val.astype('float32')/255.
 x_test = x_test.astype('float32')/255.
 
-x_train = x_train.reshape(x_train.shape[0], x_train.shape[1]*x_train.shape[2]*x_train.shape[3])         #(40000, 3072)
-x_val = x_val.reshape(x_val.shape[0], x_val.shape[1]*x_val.shape[2]*x_val.shape[3])                     #(10000, 3072)
-x_test = x_test.reshape(x_test.shape[0], x_test.shape[1]*x_test.shape[2]*x_test.shape[3])               #(40000, 3072)
-
 from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_val = to_categorical(y_val)
@@ -34,19 +34,19 @@ y_test = to_categorical(y_test)
 
 #2. 모델 구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Reshape
 
 model = Sequential()
-model.add(Dense(96, input_shape=(3072,), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(96, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(96, activation='relu'))
-model.add(Dense(64, activation='relu'))
+model.add(Dense(96, input_shape=(x_train.shape[1],x_train.shape[2],x_train.shape[3]), activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(10))
+model.add(Flatten())
+model.add(Dense(3072))
+model.add(Reshape((32,32,3)))
+model.add(Dense(3))
 
+model.summary()
+
+'''
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer = 'adam', metrics=['acc'])
 
@@ -72,3 +72,4 @@ print('y_test: ', y_test[:10].argmax(axis=1))
 # loss: [0.07754093408584595, 0.3504999876022339]
 # y_pred:  [5 8 8 0 4 6 5 6 5 9]
 # y_test:  [3 8 8 0 6 6 1 6 3 1]
+'''

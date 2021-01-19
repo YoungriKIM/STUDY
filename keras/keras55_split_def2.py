@@ -13,17 +13,16 @@ aaa = dataset
 def split_xy(aaa, x_row, x_col, y_row, y_col):
     x, y = list(), list()
     for i in range(len(aaa)):
-        if i > int(len(aaa)/y_row)-1:
+        if i > len(aaa)-y_row:
             break
         tmp_x = aaa[i:i+x_row, :x_col]
-        tmp_y = aaa[i+x_row:i+x_row+y_row, x_col:]
+        tmp_y = aaa[i:i+y_row, x_col:x_col+y_col]
         x.append(tmp_x)
         y.append(tmp_y)
     return np.array(x), np.array(y)
 
-x, y = split_xy(dataset,2,3,3,2)
+x, y = split_xy(dataset,4,3,5,2)
 print(x, '\n\n', y)
-print(x.shape)
-print(y.shape)
-# (2, 2, 3)
-# (2, 4, 2)
+print(x.shape)      #(4, 4, 3)
+print(y.shape)      #(4, 5, 2)
+
