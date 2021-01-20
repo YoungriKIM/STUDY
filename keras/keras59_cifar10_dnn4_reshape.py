@@ -44,7 +44,7 @@ model.add(Dense(3072))
 model.add(Reshape((32,32,3)))
 model.add(Dense(3))
 
-model.summary()
+# model.summary()
 
 '''
 #3. 컴파일, 훈련
