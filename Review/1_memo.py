@@ -88,3 +88,21 @@ for i in range(1,10):
     sub.loc[sub.id.str.contains("Day8"), column_name] = y_pred[:,1]
 
 sub.to_csv('../data/DACON_0126/submission_0120_1.csv', index=False)
+
+
+
+
+def mymodel():
+    model = Sequential()
+    model.add(Conv1D(256,2,padding = 'same', activation = 'relu',input_shape = (1,8)))
+    model.add(Conv1D(128,2,padding = 'same', activation = 'relu'))
+    model.add(Conv1D(64,2,padding = 'same', activation = 'relu'))
+    model.add(Conv1D(32,2,padding = 'same', activation = 'relu'))
+    model.add(Flatten())
+    model.add(Dense(128, activation = 'relu'))
+    model.add(Dense(64, activation = 'relu'))
+    model.add(Dense(32, activation = 'relu'))
+    model.add(Dense(16, activation = 'relu'))
+    model.add(Dense(8, activation = 'relu'))
+    model.add(Dense(1))
+    return model

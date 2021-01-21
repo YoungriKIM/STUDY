@@ -1,0 +1,11 @@
+판다스에서 중복값 찾기
+중복값이 있으면 그 값으로 치우치게 되기 때문에 삭제해주어야 한다.
+
+# 중복값 찾기
+# print(all_test.duplicated())
+
+# 중복값 몇개인지                
+# print(all_test.duplicated().sum())    #43
+
+# 중복된 행의 데이터만 표시하기
+# print(all_test[all_test.duplicated()])
