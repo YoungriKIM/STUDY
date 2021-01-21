@@ -200,20 +200,6 @@ for i in range(1,10):
 subfile.to_csv('../data/csv/dacon1/sub_1021_4.csv', index=False)
 
 #===================================================================
-# 예측값으로 그래프 그리기
-# import matplotlib.pyplot as plt
-# from matplotlib import font_manager, rc
-# from pandas import DataFrame
-
-# graph = pd.read_csv('../data/csv/dacon1/sub_1021_4.csv')
-# plot = graph.plot()
-# plot.set_xlabel("time")
-# plot.set_ylabel("predict")
-# plt.title("Predict")
-
-# plt.show()
-
-#===================================================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 
 # split 1 mae:  413.9899597167969
@@ -223,4 +209,6 @@ print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 # loss:  0.8751979470252991
 # loss:  0.8424314260482788
 
-# 다움에 돌리기
+# 코랩으로 돌렸음
+# loss:  0.7247836589813232
+# all relu loss:  1.0562316179275513
