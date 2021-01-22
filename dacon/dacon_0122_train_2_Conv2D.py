@@ -1,6 +1,6 @@
-#  0121-4 를 가져와서 씀
-#  할 때 마다 저장 파일 명 바꿔라~!
-#  con2D로 수정
+# 0122-2 가져와서 씀
+# GHI추가처럼 Td, T-Td 추가 하겠음
+# https://dacon.io/competitions/official/235680/codeshare/2300?page=1&dtype=recent&ptype=pub
 
 import numpy as np
 import pandas as pd
@@ -57,6 +57,8 @@ all_test = Add_features(all_test).values    # 테스트에 붙여줌
 print(x_train.shape)      #(52560, 8)   #하나씩 붙은 모습
 print(all_test.shape)     #(3888, 8)
 
+
+'''
 #===================================================================
 # train에 다음날, 다다음날의 TARGET을 오른쪽 열으로 붙임
 day_7 = x_train['TARGET'].shift(-48)      #다음날
@@ -114,7 +116,7 @@ all_test = scaler.transform(all_test)
 
 # 3) 모델에 넣을 쉐잎
 
-# for conv1D
+# for conv2D
 num1 = 8
 num2 = 2
 x_train = x_train.reshape(x_train.shape[0], 1, int(x_train.shape[1]/num1), num1)
@@ -151,6 +153,8 @@ def quantile_loss(q, y_true, y_pred):
 # K 를 tensorflow의 백앤드에서 불러왔는데 텐서형식의 mean을 쓰겠다는 것이다.
 
 qlist = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+subfile = pd.read_csv('../data/csv/dacon1/sample_submission.csv')
+
 
 def mymodel():
     model = Sequential()
@@ -168,52 +172,35 @@ def mymodel():
 
 for q in qlist:
     patience = 8
+    print(str(q)+'번째 훈련')
     model = mymodel()
     model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam', metrics=['mse'])
     stop = EarlyStopping(monitor ='val_loss', patience=patience, mode='min')
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=patience/2, factor=0.5)
-    filepath = f'../data/modelcheckpoint/dacon_train_0121_5_{q:.1f}.hdf5'
+    filepath = f'../data/modelcheckpoint/dacon_train_0121_6_{q:.1f}.hdf5'
     check = ModelCheckpoint(filepath = filepath, monitor = 'val_loss', save_best_only=True, mode='min') #앞에 f를 붙여준 이유: {}안에 변수를 넣어주겠다는 의미
-    hist = model.fit(x_train, y_train, epochs=500, batch_size=48, verbose=1, validation_split=0.2, callbacks=[stop, reduce_lr, check])
+    hist = model.fit(x_train, y_train, epochs=500, batch_size=48, verbose=1, validation_split=0.2, callbacks=[stop, reduce_lr])#, check])
+    
+    # 평가, 예측
+    result = model.evaluate(x_test, y_test, batch_size=48)
+    print('loss: ', result[0])
+    print('mae: ', result[1])
+    y_predict = model.predict(all_test)
+    # print(y_predict.shape)  #(81, 48, 2)
+    
+    # 예측값을 submission에 넣기
+    y_predict = pd.DataFrame(y_predict.reshape(y_predict.shape[0]*y_predict.shape[1],y_predict.shape[2]))
+    y_predict2 = pd.concat([y_predict], axis=1)
+    y_predict2[y_predict<0] = 0
+    y_predict3 = y_predict2.to_numpy()
+        
+    print(str(q)+'번째 지정')
+    subfile.loc[subfile.id.str.contains('Day7'), 'q_' + str(q)] = y_predict3[:,0].round(2)
+    subfile.loc[subfile.id.str.contains('Day8'), 'q_' + str(q)] = y_predict3[:,1].round(2)
 
-#===================================================================
-# 평가, 예측
-result = model.evaluate(x_test, y_test, batch_size=48)
-print('loss: ', result[0])
-print('mae: ', result[1])
+    # print(subfile.head())
 
-y_predict = model.predict(all_test)
-print(y_predict.shape)  #(81, 48, 2)
-
-#===================================================================
-# 예측값을 submission에 넣기
-
-y_predict = y_predict.reshape(y_predict.shape[0]*y_predict.shape[1],y_predict.shape[2])
-
-subfile = pd.read_csv('../data/csv/dacon1/sample_submission.csv')
-for i in range(1,10):
-    column_name = 'q_0.' + str(i)
-    subfile.loc[subfile.id.str.contains('Day7'), column_name] = y_predict[:,0].round(2)
-
-for i in range(1,10):
-    column_name = 'q_0.' + str(i)
-    subfile.loc[subfile.id.str.contains('Day8'), column_name] = y_predict[:,1].round(2)
-
-subfile.to_csv('../data/csv/dacon1/sub_1021_5.csv', index=False)
-
-#===================================================================
-# 예측값으로 그래프 그리기
-# import matplotlib.pyplot as plt
-# from matplotlib import font_manager, rc
-# from pandas import DataFrame
-
-# graph = pd.read_csv('../data/csv/dacon1/sub_1021_5.csv')
-# plot = graph.plot()
-# plot.set_xlabel("time")
-# plot.set_ylabel("predict")
-# plt.title("Predict")
-
-# plt.show()
+subfile.to_csv('../data/csv/dacon1/sub_1021_6.csv', index=False)
 
 #===================================================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
@@ -222,3 +209,6 @@ print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 # size 48,1,8 Conv2D    loss:  0.9139912128448486
 # size 1,48,8 Conv2D    loss:  0.8800864219665527
 # 0121-5 : loss:  0.7130502462387085    0121-5 2.72518
+
+# ing
+'''

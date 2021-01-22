@@ -1,11 +1,17 @@
-#  0121-4 를 가져와서 씀
+#  0121을 가져와서 씀
 #  할 때 마다 저장 파일 명 바꿔라~!
-#  con2D로 수정
+    #  GRU로 바꾸기
+
+# 코랩으로 했다!!
+
+# from google.colab import drive
+# drive.mount('/content/drive')
+
 
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential, Model, load_model
-from tensorflow.keras.layers import Dense, LSTM, Conv1D, Input, Flatten, MaxPooling1D, Dropout, Reshape, SimpleRNN, LSTM, LeakyReLU, GRU, Conv2D, MaxPool2D
+from tensorflow.keras.layers import Dense, LSTM, Conv1D, Input, Flatten, MaxPooling1D, Dropout, Reshape, SimpleRNN, LSTM, LeakyReLU, GRU
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.backend import mean, maximum
 import os
@@ -17,7 +23,7 @@ import tensorflow.keras.backend as K
 # train 데이터 불러옴
 
 # 원하는 열만 가져오기
-dataset = pd.read_csv('../data/csv/dacon1/train/train.csv', index_col=None, header=0)
+dataset = pd.read_csv('/content/drive/MyDrive/colab_data/dacon1/train/train.csv', index_col=None, header=0)
 # print(dataset.shape)
 x_train = dataset.iloc[:,[1,3,4,5,6,7,8]]
 print(x_train.shape)      #(52560, 7)
@@ -31,14 +37,13 @@ def preprocess_data(data):
 df_test = []
 
 for i in range(81):
-    file_path = '../data/csv/dacon1/test/' + str(i) + '.csv'
+    file_path = '/content/drive/MyDrive/colab_data/dacon1/test/' + str(i) + '.csv'
     temp = pd.read_csv(file_path)
     temp = preprocess_data(temp)
     df_test.append(temp)
 
 all_test = pd.concat(df_test)
 print(all_test.shape)   #(3888, 7)
-
 
 #===================================================================
 # # GHI라는 기준 추가
@@ -117,10 +122,10 @@ all_test = scaler.transform(all_test)
 # for conv1D
 num1 = 8
 num2 = 2
-x_train = x_train.reshape(x_train.shape[0], 1, int(x_train.shape[1]/num1), num1)
-x_val = x_val.reshape(x_val.shape[0], 1, int(x_val.shape[1]/num1), num1)
-x_test = x_test.reshape(x_test.shape[0], 1, int(x_test.shape[1]/num1), num1)
-all_test = all_test.reshape(all_test.shape[0], 1, int(all_test.shape[1]/num1), num1)
+x_train = x_train.reshape(x_train.shape[0], int(x_train.shape[1]/num1), num1)
+x_val = x_val.reshape(x_val.shape[0], int(x_val.shape[1]/num1), num1)
+x_test = x_test.reshape(x_test.shape[0], int(x_test.shape[1]/num1), num1)
+all_test = all_test.reshape(all_test.shape[0], int(all_test.shape[1]/num1), num1)
 
 y_train = y_train.reshape(y_train.shape[0], int(y_train.shape[1]/num2), num2)
 y_val = y_val.reshape(y_val.shape[0], int(y_val.shape[1]/num2), num2)
@@ -154,11 +159,7 @@ qlist = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
 def mymodel():
     model = Sequential()
-    model.add(Conv2D(96, (1,2), input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3]), padding='same', activation='relu'))
-    model.add(Conv2D(96, (1,2), padding='same'))
-    model.add(Conv2D(96, (1,2), padding='same'))
-    model.add(Flatten())
-    model.add(Dense(96))
+    model.add(GRU(7, input_shape=(x_train.shape[1], x_train.shape[2]), activation='relu'))
     model.add(Dense(96))
     model.add(Reshape((48,2)))
     model.add(Dense(2))
@@ -172,9 +173,9 @@ for q in qlist:
     model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam', metrics=['mse'])
     stop = EarlyStopping(monitor ='val_loss', patience=patience, mode='min')
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=patience/2, factor=0.5)
-    filepath = f'../data/modelcheckpoint/dacon_train_0121_5_{q:.1f}.hdf5'
+    filepath = f'/content/drive/MyDrive/colab_data/modelcheckpoint/dacon_train_0121_3_{q:.1f}.hdf5'
     check = ModelCheckpoint(filepath = filepath, monitor = 'val_loss', save_best_only=True, mode='min') #앞에 f를 붙여준 이유: {}안에 변수를 넣어주겠다는 의미
-    hist = model.fit(x_train, y_train, epochs=500, batch_size=48, verbose=1, validation_split=0.2, callbacks=[stop, reduce_lr, check])
+    hist = model.fit(x_train, y_train, epochs=300, batch_size=48, verbose=1, validation_split=0.2, callbacks=[stop, reduce_lr, check])
 
 #===================================================================
 # 평가, 예측
@@ -190,7 +191,7 @@ print(y_predict.shape)  #(81, 48, 2)
 
 y_predict = y_predict.reshape(y_predict.shape[0]*y_predict.shape[1],y_predict.shape[2])
 
-subfile = pd.read_csv('../data/csv/dacon1/sample_submission.csv')
+subfile = pd.read_csv('/content/drive/MyDrive/colab_data/dacon1/sample_submission.csv')
 for i in range(1,10):
     column_name = 'q_0.' + str(i)
     subfile.loc[subfile.id.str.contains('Day7'), column_name] = y_predict[:,0].round(2)
@@ -199,7 +200,7 @@ for i in range(1,10):
     column_name = 'q_0.' + str(i)
     subfile.loc[subfile.id.str.contains('Day8'), column_name] = y_predict[:,1].round(2)
 
-subfile.to_csv('../data/csv/dacon1/sub_1021_5.csv', index=False)
+subfile.to_csv('/content/drive/MyDrive/colab_data/dacon1/sub_1021_3.csv', index=False)
 
 #===================================================================
 # 예측값으로 그래프 그리기
@@ -207,7 +208,7 @@ subfile.to_csv('../data/csv/dacon1/sub_1021_5.csv', index=False)
 # from matplotlib import font_manager, rc
 # from pandas import DataFrame
 
-# graph = pd.read_csv('../data/csv/dacon1/sub_1021_5.csv')
+# graph = pd.read_csv('/content/drive/MyDrive/colab_data/dacon1/sub_1021_3.csv')
 # plot = graph.plot()
 # plot.set_xlabel("time")
 # plot.set_ylabel("predict")
@@ -218,7 +219,7 @@ subfile.to_csv('../data/csv/dacon1/sub_1021_5.csv', index=False)
 #===================================================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 
-# split 48 conv1d   loss:  0.8572525382041931
-# size 48,1,8 Conv2D    loss:  0.9139912128448486
-# size 1,48,8 Conv2D    loss:  0.8800864219665527
-# 0121-5 : loss:  0.7130502462387085    0121-5 2.72518
+# 0121-3 GRU
+# loss:  1.2270866632461548
+# mae:  302.86907958984375
+
