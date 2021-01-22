@@ -1,6 +1,4 @@
-# 0122-1 가져와서 씀
-# GHI추가처럼 Td, T-Td 추가 하겠음
-# https://dacon.io/competitions/official/235680/codeshare/2300?page=1&dtype=recent&ptype=pub
+# 0122_4 파일과 최저점 저장하기
 
 import numpy as np
 import pandas as pd
@@ -54,15 +52,17 @@ def Add_features(data):
     data.insert(1, 'GHI', data['DNI'] * data['cos'] + data['DHI'])
     # 데이터를 넣어줄건데 1열에(기존 열은 오른쪽으로 밀림), 'GHI'명으로, 마지막의 수식으로 나온 값을
     data.drop(['cos'], axis=1, inplace = True)
+    data.drop(['RH'], axis=1, inplace = True)
+    data.drop(['Td'], axis=1, inplace = True)
     #'cos' 열을 삭제를 할 것 이고. 이 삭제한 데이터프레임으로 기존 것을 대체하겠다.
     return data
 
 x_train = Add_features(x_train)     # 트레인에 붙여줌
 all_test = Add_features(all_test).values    # 테스트에 붙여줌
 
-print(x_train.shape)      #(52560, 10)   #하나씩 붙은 모습
-print(all_test.shape)     #(3888, 10)
-
+# RH 빼기
+print(x_train.shape)      #(52560, 8)   #하나씩 붙은 모습
+print(all_test.shape)     #(3888, 8)
 
 
 #===================================================================
@@ -73,7 +73,7 @@ day_8 = dataset['TARGET'].shift(-48*2)    #다다음날
 x_train = pd.concat([x_train, day_7, day_8], axis=1)
 x_train = x_train.iloc[:-96,:]  # 마지막 2일은 데이터가 비니까 빼준다
 
-print(x_train.shape)       #(52464, 12)       # 10개는 기준일 +GHI +T +T-Td / +day7 + day8
+print(x_train.shape)       #(52464, 10)       # 10개는 기준일 +GHI +T +T-Td / +day7 + day8
 
 #===================================================================
 # x_train을 RNN식으로 데이터 자르기
@@ -91,8 +91,8 @@ def split_xy(aaa, x_row, x_col, y_row, y_col):
     return np.array(x), np.array(y)
 
 # print(x, '\n\n', y)
-x_train, y_train = split_xy(aaa, 48,10,48,2)     # 30분씩 RNN식으로 자름
-print(x_train.shape)                    #(52417, 48, 10)
+x_train, y_train = split_xy(aaa, 48,8,48,2)     # 30분씩 RNN식으로 자름
+print(x_train.shape)                    #(52417, 48, 8)
 print(y_train.shape)                    #(52417, 48, 2)
 
 all_test = all_test.reshape(int(all_test.shape[0]/48), 48, all_test.shape[1])
@@ -123,7 +123,7 @@ all_test = scaler.transform(all_test)
 # 3) 모델에 넣을 쉐잎
 
 # for conv2D
-num1 = 10
+num1 = 8
 num2 = 2
 x_train = x_train.reshape(x_train.shape[0], 1, int(x_train.shape[1]/num1), num1)
 x_val = x_val.reshape(x_val.shape[0], 1, int(x_val.shape[1]/num1), num1)
@@ -149,6 +149,13 @@ y_test = y_test.reshape(y_test.shape[0], int(y_test.shape[1]/num2), num2)
 # (8387, 48, 2)
 # (10484, 48, 2)
 
+#===================================================================
+# 데이터셋 저장
+np.save('../data/npy/dacon1/0122_4_x.npy', arr=[x_train, x_val, x_test])
+np.save('../data/npy/dacon1/0122_4_all_test.npy', arr=all_test)
+np.save('../data/npy/dacon1/0122_4_y.npy', arr=[y_train, y_val, y_test])
+
+'''
 #===================================================================
 #퀀타일 로스 적용된 모델 구성 + 컴파일, 훈련까지
 
@@ -183,7 +190,7 @@ for q in qlist:
     model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam', metrics=['mse'])
     stop = EarlyStopping(monitor ='val_loss', patience=patience, mode='min')
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=patience/2, factor=0.5, verbose=1)
-    filepath = f'../data/modelcheckpoint/dacon_train_0122_2_{q:.1f}.hdf5'
+    filepath = f'../data/modelcheckpoint/dacon_train_0122_4_{q:.1f}.hdf5'
     check = ModelCheckpoint(filepath = filepath, monitor = 'val_loss', save_best_only=True, mode='min') #앞에 f를 붙여준 이유: {}안에 변수를 넣어주겠다는 의미
     hist = model.fit(x_train, y_train, epochs=500, batch_size=48, verbose=1, validation_split=0.2, callbacks=[stop, reduce_lr, check])
     
@@ -206,7 +213,7 @@ for q in qlist:
 
     # print(subfile.head())
 
-subfile.to_csv('../data/csv/dacon1/sub_0122_2.csv', index=False)
+subfile.to_csv('../data/csv/dacon1/sub_0122_4.csv', index=False)
 
 #===================================================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
@@ -219,4 +226,8 @@ print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 # ing  loss:  0.7192889451980591    1.9242636819	
 # T, T-Td 추가 후 0122-2
 #ing  loss:  0.6954217553138733     1.9524685363	
-
+# RH 삭제   0122-3
+# loss:  0.7085126042366028
+# Td 삭제
+# loss:  0.703251838684082
+'''
