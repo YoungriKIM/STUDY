@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 from pandas import DataFrame
 
-pred = pd.read_csv('../data/csv/dacon1/sub_1021_4.csv')
+pred = pd.read_csv('../data/csv/dacon1/sub_0122_4-3.csv')
 
 ranges = 336        # 7일치로 보겠음
 hours = range(ranges)
