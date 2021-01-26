@@ -13,11 +13,15 @@ import glob
 import random
 import tensorflow.keras.backend as K
 
+# from google.colab import drive
+# drive.mount('/content/drive')
+
+
 #===================================================================
 # train 데이터 불러옴
 
 # 원하는 열만 가져오기
-dataset = pd.read_csv('../data/csv/dacon1/train/train.csv', index_col=None, header=0)
+dataset = pd.read_csv('/content/drive/MyDrive/colab_data/dacon1/train/train.csv', index_col=None, header=0)
 # print(dataset.shape)
 x_train = dataset.iloc[:,[1,3,4,5,6,7,8]]
 print(x_train.shape)      #(52560, 7)
@@ -31,7 +35,7 @@ def preprocess_data(data):
 df_test = []
 
 for i in range(81):
-    file_path = '../data/csv/dacon1/test/' + str(i) + '.csv'
+    file_path = '/content/drive/MyDrive/colab_data/dacon1/test/' + str(i) + '.csv'
     temp = pd.read_csv(file_path)
     temp = preprocess_data(temp)
     df_test.append(temp)
@@ -117,10 +121,10 @@ all_test = scaler.transform(all_test)
 # for conv2D
 num1 = 8
 num2 = 2
-x_train = x_train.reshape(x_train.shape[0], 1, int(x_train.shape[1]/num1), num1)
-x_val = x_val.reshape(x_val.shape[0], 1, int(x_val.shape[1]/num1), num1)
-x_test = x_test.reshape(x_test.shape[0], 1, int(x_test.shape[1]/num1), num1)
-all_test = all_test.reshape(all_test.shape[0], 1, int(all_test.shape[1]/num1), num1)
+x_train = x_train.reshape(x_train.shape[0], int(x_train.shape[1]/num1), num1)
+x_val = x_val.reshape(x_val.shape[0], int(x_val.shape[1]/num1), num1)
+x_test = x_test.reshape(x_test.shape[0], int(x_test.shape[1]/num1), num1)
+all_test = all_test.reshape(all_test.shape[0], int(all_test.shape[1]/num1), num1)
 
 y_train = y_train.reshape(y_train.shape[0], int(y_train.shape[1]/num2), num2)
 y_val = y_val.reshape(y_val.shape[0], int(y_val.shape[1]/num2), num2)
@@ -151,16 +155,16 @@ def quantile_loss(q, y_true, y_pred):
 # K 를 tensorflow의 백앤드에서 불러왔는데 텐서형식의 mean을 쓰겠다는 것이다.
 
 qlist = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-subfile = pd.read_csv('../data/csv/dacon1/sample_submission.csv')
+subfile = pd.read_csv('/content/drive/MyDrive/colab_data/dacon1/sample_submission.csv')
 
 
 def mymodel():
     model = Sequential()
-    model.add(Conv2D(96, (1,2), input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3]), padding='same', activation='relu'))
-    model.add(Conv2D(96, (1,2), padding='same'))
-    model.add(Conv2D(96, (1,2), padding='same'))
+    model.add(LSTM(32, input_shape=(x_train.shape[1], x_train.shape[2]), activation='relu'))
     model.add(Flatten())
-    model.add(Dense(96))
+    model.add(Dense(64))
+    model.add(Dense(64))
+    model.add(Dense(32))
     model.add(Dense(96))
     model.add(Reshape((48,2)))
     model.add(Dense(2))
@@ -198,14 +202,10 @@ for q in qlist:
 
     # print(subfile.head())
 
-subfile.to_csv('../data/csv/dacon1/ggomsu/best_3.csv', index=False)
+subfile.to_csv('/content/drive/MyDrive/colab_data/dacon1/sub_0126_1.csv', index=False)
+
 
 #===================================================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 
-# split 48 conv1d   loss:  0.8572525382041931
-# size 48,1,8 Conv2D    loss:  0.9139912128448486
-# size 1,48,8 Conv2D    loss:  0.8800864219665527
-# 0121-5 : loss:  0.7130502462387085    0121-5 2.72518
-# 섭미션 수정 후 
-# ing  loss:  0.7192889451980591    1.92426	 기쁨의 땐스 ^^
+# 2.6781342257	lstm trash^^
