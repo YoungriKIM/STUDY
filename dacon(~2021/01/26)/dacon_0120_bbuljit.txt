@@ -1,0 +1,35 @@
+x로 돌린 y를 저장하기 위해 한 뻘짓을 기록
+
+# 이 y 예측값을 RNN방식으로 자르기 전으로 되돌려야 함
+# print(y_predict.shape)          #(10425, 48, 2)
+
+# print('check1')
+
+# bbb = y_predict
+# b_len = y_predict.shape[0]
+# b_row = y_predict.shape[1]
+
+# # [0,:,:]은 그대로 넣고 1부터 하나씩 가져와서 붙일거임
+# def back_origin(bbb, b_len, b_row):
+#     y_result = list()
+#     for i in range(1,b_len):
+#         if i > b_len:
+#             break
+#         # tmp_origin_top = bbb[0,:,:]
+#         y_result.append(bbb[i, -1 , :])
+#         # y_result2 = np.append(tmp_origin_top, y_result, axis=0)
+#     return np.array(y_result)
+
+# print('check2')
+
+# origin_2 = back_origin(y_predict, b_len, b_row)
+# # print(origin_2.shape)
+
+# origin_1 = bbb[0,:,:]
+
+# print('check3')
+
+# # origin  1,2를 붙여줌     > y의 원래 쉐잎: (10520, 2)
+# origin_all = np.append(origin_1, origin_2, axis=0)
+# print(origin_all.shape)     #(10520, 2)
+# print(origin_all[:48,:])
