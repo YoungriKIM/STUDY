@@ -1,22 +1,28 @@
-##=======================Add Td, T-Td and GHI features
-def Add_features(data):
-  c = 243.12
-  b = 17.62
-  gamma = (b * (data['T']) / (c + (data['T']))) + np.log(data['RH'] / 100)
-  dp = ( c * gamma) / (b - gamma)
-  data.insert(1,'Td',dp)
-  data.insert(1,'T-Td',data['T']-data['Td'])
-  data.insert(1,'GHI',data['DNI']+data['DHI'])
-  return data
+import numpy as np
+import pandas as pd
+from tensorflow.keras.models import Sequential, Model, load_model
+from tensorflow.keras.layers import Dense, LSTM, Conv1D, Input, Flatten, MaxPooling1D, Dropout, Reshape, SimpleRNN, LSTM, LeakyReLU, GRU, Conv2D, MaxPool2D, BatchNormalization, Activation
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from tensorflow.keras.backend import mean, maximum
+import os
+import glob
+import random
+import tensorflow.keras.backend as K
 
-  x = []
-for i in quantiles:
-    filepath_cp = f'../dacon/data/modelcheckpoint/dacon_06_y1_quantile_{i:.1f}.hdf5'
-    model = load_model(filepath_cp, compile = False)
-    model.compile(loss = lambda y_true,y_pred: quantile_loss(i,y_true,y_pred), optimizer = 'adam', metrics = [lambda y,y_pred: quantile_loss(i,y,y_pred)])
-    pred = pd.DataFrame(model.predict(x_test).round(2))
-    x.append(pred)
-df_temp1 = pd.concat(x, axis = 1)
-df_temp1[df_temp1<0] = 0
-num_temp1 = df_temp1.to_numpy()
-submission.loc[submission.id.str.contains("Day7"), "q_0.1":] = num_temp1
+model = Sequential()
+model.add(Conv1D(96, 2, input_shape=(48,8), padding='same'))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Conv1D(96, 2, padding='same'))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Conv1D(96, 2, padding='same'))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Dense(96))
+model.add(Dense(48))
+model.add(Dense(24))
+model.add(Dense(7))
+model.add(Dense(1))
+
+model.summary()
