@@ -11,9 +11,11 @@ x = np.arange(1, 11)
 y = np.array([1,2,4,3,5,5,7,9,8,11])
 print('\n', x,'\n', y)
 
+print(x.shape)
+
 #2 모델구성
 model = Sequential()
-model.add(Dense(10, input_shape=(1,)))
+model.add(Dense(10, input_shape=(1,)))   #  = model.add(Dense(10, input_dim=1))
 model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(1))

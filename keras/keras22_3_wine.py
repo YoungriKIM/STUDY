@@ -21,7 +21,6 @@ y = dataset.target
 # print(y.shape) #(178,)
 # print(x) #전처리가 안 된 것을 확인
 # print(y) #순서대로 다중분류되어있으니 셔플을 해야 함
-
 # 나누고
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=66)
