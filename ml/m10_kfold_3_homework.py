@@ -21,7 +21,10 @@ dataset = load_iris()
 x = dataset.data
 y = dataset.target
 
-kfold = KFold(n_splits=5, shuffle=True)     # 5개로 나눠서 섞을거야
+print(x.shape)
+print(y.shape)
+
+kfold = KFold(n_splits=5, shuffle=True, random_state=311)     # 5개로 나눠서 섞을거야
 
 #2. 모델 구성
 model = LinearSVC()
@@ -31,10 +34,28 @@ model = LinearSVC()
 # model = DecisionTreeClassifier()
 # model = RandomForestClassifier()
 
+for train_index, test_index in kfold.split(x):
+    # print("TRAIN:", train_index, "TEST:", test_index)
+
+    train_index, val_index = train_test_split(train_index, train_size=0.8, shuffle=True, random_state=311)
+    x_train, x_val, x_test = x[train_index], x[val_index], x[test_index]
+
+print(x_train.shape)
+print(x_val.shape)
+print(x_test.shape)
+
+for train_index, test_index in kfold.split(y):
+    # print("TRAIN:", train_index, "TEST:", test_index)
+
+    train_index, val_index = train_test_split(train_index, train_size=0.8, shuffle=True, random_state=311)
+    y_train, y_val, y_test = y[train_index], y[val_index], y[test_index]
+
+print(y_train.shape)
+print(y_val.shape)
+print(y_test.shape)
+
 scores = cross_val_score(model, x, y, cv=kfold)
-
 print('scores: ', scores)
-
 
 #===========================================
 # 딥러닝 모델
