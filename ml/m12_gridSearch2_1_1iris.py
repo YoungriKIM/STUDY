@@ -6,7 +6,11 @@
 #     {'max_depth' : [6,8,10,12]},
 #     {'min_samples_leaf' : [3,5,7,10]},
 #     {'min_samples_split' : [2,3,5,10]},
+<<<<<<< HEAD
 #     {'n_jobs' : [-1,2,4]}                        #cpu를 몇개를 쓸것인지. -1: 전부 / 2: 2개
+=======
+#     {'n_jobs' : [-1,2,4]}
+>>>>>>> 00e481cd645c32239408a3bf2a28e6588d5c0aa8
 # ]
 
 import numpy as np
@@ -26,7 +30,11 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random
 
 kfold = KFold(n_splits=5, shuffle=True)
 
+<<<<<<< HEAD
 parameters = [      # 내가 원하는 파라미터를 딕셔너리 안에 키 밸류 형태로 넣어준다. 경우의 수는 곱해서 더한다.
+=======
+parameters = [
+>>>>>>> 00e481cd645c32239408a3bf2a28e6588d5c0aa8
     {'n_estimators' : [100,200], 'n_jobs' : [-1]},
     {'max_depth' : [6,8,10,12], 'min_samples_split' : [2,3,5,10]},
     {'min_samples_leaf' : [3,5,7,10]},

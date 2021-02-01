@@ -24,5 +24,3 @@ model.add(Dense(48))
 model.add(Dense(24))
 model.add(Dense(7))
 model.add(Dense(1))
-
-model.summary()

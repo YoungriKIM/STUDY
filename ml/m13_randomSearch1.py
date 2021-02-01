@@ -3,8 +3,11 @@
 
 # 그리드 서치를 랜덤 서치로 바꿔보자
 
+<<<<<<< HEAD
 # 랜더마이즈드는 n_iter 의 수 만큼 돌아간다. 디폴트는 10이니까. kfold가 5면 50번 돌아가겠지 
 
+=======
+>>>>>>> 00e481cd645c32239408a3bf2a28e6588d5c0aa8
 import numpy as np
 from sklearn.datasets import load_iris 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler

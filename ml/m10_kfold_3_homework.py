@@ -2,7 +2,10 @@
 # train test 나눈 다음 train만 kfold 하여 val 만들지 말고
 # train, test로 5등분 kfold한 다음 잘린 train 안에서 train_test_split으로 val도 만들기
 
+<<<<<<< HEAD
 # m17에 답이 있다....
+=======
+>>>>>>> 00e481cd645c32239408a3bf2a28e6588d5c0aa8
 
 import numpy as np
 from sklearn.datasets import load_iris 
