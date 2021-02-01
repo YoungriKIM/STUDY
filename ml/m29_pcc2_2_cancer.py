@@ -10,13 +10,13 @@ from sklearn.ensemble import RandomForestRegressor
 dataset = load_breast_cancer()
 x = dataset.data
 y = dataset.target
-print(x.shape, y.shape)     #(442, 10) (442,)
+print(x.shape, y.shape)     #(569, 30) (569,)
 
 #-----------------------------------------------------------------------------------
 # # n_components = n 으로 압축할 열 개수를 지정할 수 있다.
 # pca = PCA(n_components = 7)
 # x2 = pca.fit_transform(x)
-# print(x2.shape)             # (442, 7)
+# print(x2.shape)             # (569, 7)
 
 # pca_EVR = pca.explained_variance_ratio_ # 변화율
 # print(pca_EVR)

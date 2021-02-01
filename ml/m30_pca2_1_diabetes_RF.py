@@ -4,7 +4,7 @@
 import numpy as np
 from sklearn.datasets import load_diabetes
 from sklearn.decomposition import PCA 
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 dataset = load_diabetes()
@@ -13,7 +13,6 @@ y = dataset.target
 print(x.shape, y.shape)     #(442, 10) (442,)
 
 #-----------------------------------------------------------------------------------
-
 # pca = PCA()
 # pca.fit(x)
 # cumsum = np.cumsum(pca.explained_variance_ratio_)
@@ -28,30 +27,28 @@ print(x.shape, y.shape)     #(442, 10) (442,)
 # plt.plot(cumsum)
 # plt.grid()
 # plt.show()
-
 #-----------------------------------------------------------------------------------
-# 전처리
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=311)
-
 # pca 적용
 pca = PCA(n_components = 8)
-x2_train = pca.fit_transform(x_train)
-x2_test = pca.fit_transform(x_test)
-print(x2_train.shape)             # (353, 8)
+x2 = pca.fit_transform(x)
+print(x2.shape)             # (442, 8)
 
 pca_EVR = pca.explained_variance_ratio_ # 변화율
 print(pca_EVR)
 
 print(sum(pca_EVR))
 
+# 전처리
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=311)
+
 # 모델 구성
 model = RandomForestRegressor()
 
 # 컴파일ㄴ 훈련ㅇ
-model.fit(x2_train, y_train)
+model.fit(x_train, y_train)
 
 # 평가, 예측
-score = model.score(x2_test, y_test)
+score = model.score(x_test, y_test)
 print('score: ', score)
 
 
@@ -65,4 +62,4 @@ print('score: ', score)
 # score_2:  0.428876611730748
 # =========================================================
 # m30_pca 8로 압축
-# score:  0.07749743585420232
+# score:  0.4744528214860011
