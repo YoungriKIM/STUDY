@@ -1,13 +1,18 @@
 # m31로 만든 0.95 n_component를 사용하여
-# dnn 모델을 만들 것
-# 기존의 mnist dnn 파일보더 성능을 좋게 만들어라~ + cnn과 비교도 해
+# XGB(디폴트) 모델을 만들 것
+
+# xgb 디폴트의 성능이 크게 좋지 않은데, 파라미터 튜닝이 없기 때문이라고 추측할 수 있다.
+# m34에는 파라미너 튜닝을 해보자
 
 
 import numpy as np
 from tensorflow.keras.datasets import mnist
 from sklearn.decomposition import PCA 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
+import warnings
+warnings.filterwarnings('ignore')
 
 #1. x 데이터 불러오고 pca적용 ===================================
 (x_train, _), (x_test, _) = mnist.load_data()
@@ -26,7 +31,8 @@ x2 = pca.fit_transform(x)
 # print('cumsum: ', sum(pca_EVR))    # cumsum: 0.9500035195029432
 
 # train_test_split
-x_train, x_test = train_test_split(x2, test_size=0.1428571, shuffle=True, random_state=311)
+x_train = x2[:60000, :]
+x_test = x2[60000:, :]
 
 from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
@@ -42,42 +48,16 @@ x_test = scaler.transform(x_test)
 #1. y 데이터 불러오고 전처리  ===================================
 (_, y_train), (_, y_test) = mnist.load_data()
 
-from tensorflow.keras.utils import to_categorical
-y_train = to_categorical(y_train)
-y_test = to_categorical(y_test)
+#2. 모델
+model = XGBClassifier(n_jobs=-1, use_label_encoder=False, n_estimator= 2000)  
+# n_estimator : 나무의 수, epoch와 비슷하게 생각
 
-print(y_train.shape, y_test.shape)      #(60000, 10) (10000, 10)
+#3. 컴파일ㄴ 훈련ㅇ
+model.fit(x_train, y_train, verbose = True, eval_metric='mlogloss', eval_set=[(x_train, y_train), (x_test, y_test)])
 
-
-#2. 모델 구성 ===================================
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-
-model = Sequential()
-model.add(Dense(200, input_shape=(154, ), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(160, activation='relu'))
-model.add(Dense(80))
-model.add(Dense(80))
-model.add(Dense(40))
-model.add(Dense(10, activation = 'softmax'))
-
-#3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-
-from tensorflow.keras.callbacks import EarlyStopping
-stop = EarlyStopping(monitor='acc', patience=16, mode='max')
-
-model.fit(x_train, y_train, epochs=100, batch_size=28, validation_split=0.2, verbose=1, callbacks=[stop])
-
-#. 평가, 예측
-loss = model.evaluate(x_test, y_test, batch_size=28)
-print('loss: ', loss)
-
-y_pred = model.predict(x_test[:10])
-print('y_pred: ', y_pred.argmax(axis=1))
-print('y_test: ', y_test[:10].argmax(axis=1))
-
+#4. 평가(스코어)
+score = model.score(x_test, y_test)
+print('score: ', score)
 
 # ==============================================================================
 # 40-2 mnist CNN
@@ -89,5 +69,7 @@ print('y_test: ', y_test[:10].argmax(axis=1))
 # y_test:  [7 2 1 0 4 1 4 9 5 9]
 
 # m32_1 pca 0.95이상으로 지정한 파일
-# loss:  [2.301262855529785, 0.11349999904632568]
-# 뭔가...잘못된 것 같은데 ^^
+# loss:  [0.11894247680902481, 0.9639000296592712]
+
+# m33_1 pca 0.95이상으로 지정한 파일 > XGBoost
+# score:  0.9634
