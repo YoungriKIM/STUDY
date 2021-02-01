@@ -1,9 +1,9 @@
-# iris로 여러 머신러닝 모델을 돌리고 비교해보자
+# train_test_split 의 아쉬운 점을 보완한 kfold를 써보자
 
 import numpy as np
 from sklearn.datasets import load_iris 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold, cross_val_score     # KFold는 여기! / cross_val_score: 교차검증값(자른 것을 돌아가면서 검증)
 from sklearn.metrics import accuracy_score
 
 # 사이킷런에서 제공하는 아래에 있는 모델들을 불러와서 실행하고 비교해보자
@@ -11,49 +11,45 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression     # 이름이 회귀스럽지만 분류모델이다!
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier     # 포레스트는 트리들을 앙상블한 업그레이드형
+from sklearn.ensemble import RandomForestClassifier
 
 #1. 데이터 불러오기
 dataset = load_iris()
 x = dataset.data
 y = dataset.target
 
-from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=66)
-
-from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler()
-scaler.fit(x_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
-
-# scaler = StandardScaler()
-# scaler.fit(x_train)
-# x_train = scaler.transform(x_train)
-# x_test = scaler.transform(x_test)
+kfold = KFold(n_splits=5, shuffle=True)     # 5개로 나눠서 섞을거야
 
 #2. 모델 구성
 
-# model = LinearSVC()
+model = LinearSVC()
 # model = SVC()
 # model = KNeighborsClassifier()
-model = LogisticRegression()
+# model = LogisticRegression()
 # model = DecisionTreeClassifier()
 # model = RandomForestClassifier()
 
-#3. 컴파일, 훈련
-model.fit(x_train,y_train)      # 머신러닝은 컴파일 없이 그냥 훈련이다.
+scores = cross_val_score(model, x, y, cv=kfold)     #엄밀히 말하자면 val은 없는 거임. 그거까지는 다음 파일로
+# 모델에 x, y kfold한거를 넣을거야 결과는 아래
+# KFold train/ test 일 때 ====================================
+# scores:  [0.93333333 1.         0.93333333 1.         0.9       ]
+# 이렇게 model.score가 5개가 나온다.
 
+print('scores: ', scores)
+
+'''
+#3. 컴파일, 훈련
+model.fit(x, y)      # 머신러닝은 컴파일 없이 그냥 훈련이다.
 
 #4. 평가, 예측
-result = model.score(x_test,y_test)
+result = model.score(x, y)
 print('model.score: ', result)
 
-y_predict = model.predict(x_test)
+y_predict = model.predict(x)
 
-acc = accuracy_score(y_test, y_predict)
+acc = accuracy_score(y, y_predict)
 print('accuracy_score: ', acc)
-
+'''
 #===========================================
 # 딥러닝 모델
 # acc:  0.9666666388511658

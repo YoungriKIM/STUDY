@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.utils.testing import all_estimators   # 이 안에는 많은 모델들이 들어있다.
 from sklearn.datasets import load_iris 
-import warnings
+import warnings     # 버전이나 디폴트가 안 맞아서 에러가 뜰 수 있어 무시하고 아래에 try, except 추가
 
 warnings.filterwarnings('ignore')       # 워닝 무시할거야 / 지우면 워닝이 모두 표시된다.
 

@@ -48,3 +48,4 @@ print('acc: ', result[1])
 # model.score:  0.25
 
 # 히든 레이어 추가 후
+# acc:  1.0

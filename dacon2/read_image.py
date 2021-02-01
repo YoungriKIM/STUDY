@@ -15,21 +15,37 @@ import pandas as pd
 
 # 샘플 10개 불러오기 / x_train ===========================================================
 
-df_train = []
+# df_train = []
 
-for i in range(0,10):
-    file_path = '../Users/Admin/Desktop/dacon/mnist/dirty_mnist/0000' + str(i) + '.png'
-    image = pilimg.open(file_path)
-    pix = np.array(image)
-    pix = pd.DataFrame(pix)
-    df_train.append(pix)
+# for a in np.arange(0, 10000):
+#     b = str(a)
+#     c = str('0'*(5-len(b)))
+#     i = (c+b)                                           ##################################### 불러와서 csv로 저장해서 편하게 쓰자
+#     file_path = '../Users/Admin/Desktop/dacon/mnist/dirty_mnist/' + str(i) + '.png'
+#     image = pilimg.open(file_path)
+#     pix = np.array(image)
+#     pix = pd.DataFrame(pix)
+#     df_train.append(pix)
 
-x = pd.concat(df_train)
-x = x.values
-print(x.shape)       #(2560, 256)
+# x = pd.concat(df_train)
+# x = x.values
+# print(x.shape)       #(2560000, 256)
 
-x = x.reshape(10, 256, 256, 1)
-print(x.shape)       #(10, 256, 256, 1)
+# x_df = pd.DataFrame(x)
+
+# x_df.to_csv('../Users/Admin/Desktop/dacon/mnist/newsavetrain/0~9999.csv')
+#------------------------------------------------------------------------------------
+
+x_df = pd.read_csv('../Users/Admin/Desktop/dacon/mnist/newsavetrain/0~9999.csv', index_col=0, header=0)    # None, 0, 1 등을 넣어서 인덱스와 헤더를 지정할 수 있다.
+
+print(x_df.info())
+x = x_df.values
+
+a = 10000
+x = x.reshape(a, int(x.shape[0]/a), x.shape[1], 1)
+print(x.shape)       #(10000, 256, 256, 1)
+
+'''
 
 # 샘플 10개 불러오기 / y_train ===========================================================
 
@@ -108,3 +124,4 @@ pred_save = pd.DataFrame(y_pred)
 print(subfile.head())
 
 pred_save.to_csv('../Users/Admin/Desktop/dacon/mnist/submit/sample_submission_1.csv', index=False)
+'''
