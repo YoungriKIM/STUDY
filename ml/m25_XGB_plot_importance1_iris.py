@@ -32,7 +32,7 @@ print('score_1: ', score_1)
 # xgboost에 있는 중요도 그래프를 이용해보자
 plot_importance(model)
 plt.show()
-# 그래프가 안뜨는데..확인해서 수정하기 + F score가 뭔지 찾아보기
+# F score란? xlabel : str, default "F score"
 
 '''
 # 중요도 그래프 그리기(솎기 전)

@@ -30,10 +30,10 @@ start_t = timeit.default_timer()
 
 
 #2. 모델(모델1)
-model = XGBClassifier(n_jobs= 1) # cpu 코어를 모두 쓰겠다.
+model = XGBClassifier(n_jobs= 1, use_label_encoder=False) # n_jobs : cpu 코어를 모두 쓰겠다. /  use_label_encoder=False : 에러 없애줌
 
 #3. 컴파일ㄴ 훈련ㅇ
-model.fit(x_train, y_train)
+model.fit(x_train, y_train, eval_metric='logloss')  #eval_metric='logloss' 에러 잡아줌
 
 #4. 평가(스코어)    
 score_1 = model.score(x_test, y_test)

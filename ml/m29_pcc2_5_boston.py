@@ -2,21 +2,21 @@
 # 고차원의 데이터를 저차원의 데이터로 환원시키는 기법. 400개 칼럼이면 200개로 압축하는 것!
 
 import numpy as np
-from sklearn.datasets import load_diabetes, load_breast_cancer
+from sklearn.datasets import load_diabetes, load_breast_cancer, load_wine, load_iris, load_boston
 from sklearn.decomposition import PCA 
 #decomposition: 분해 / PCA: 주성분분석(Principal Component Analysis) 
 from sklearn.ensemble import RandomForestRegressor
 
-dataset = load_breast_cancer()
+dataset = load_boston()
 x = dataset.data
 y = dataset.target
-print(x.shape, y.shape)     #(442, 10) (442,)
+print(x.shape, y.shape)     #(506, 13) (506,)
 
 #-----------------------------------------------------------------------------------
 # # n_components = n 으로 압축할 열 개수를 지정할 수 있다.
-# pca = PCA(n_components = 7)
+# pca = PCA(n_components = 4)
 # x2 = pca.fit_transform(x)
-# print(x2.shape)             # (442, 7)
+# print(x2.shape)             # (506, 4)
 
 # pca_EVR = pca.explained_variance_ratio_ # 변화율
 # print(pca_EVR)
@@ -35,16 +35,10 @@ print('cumsum >= 0.95', cumsum >=0.95)
 print('d: ', d)
 
 #========================================================
-# cumsum:  [0.98204467 0.99822116 0.99977867 0.9998996  0.99998788 0.99999453
-#  0.99999854 0.99999936 0.99999971 0.99999989 0.99999996 0.99999998
-#  0.99999999 0.99999999 1.         1.         1.         1.
-#  1.         1.         1.         1.         1.         1.
-#  1.         1.         1.         1.         1.         1.        ]
-# cumsum >= 0.95 [ True  True  True  True  True  True  True  True  True  True  True  True
-#   True  True  True  True  True  True  True  True  True  True  True  True
-#   True  True  True  True  True  True]
-# d:  1
-# 하나로 압축해도 될 듯 ㅎ
+# cumsum:  [0.80582318 0.96887514 0.99022375 0.99718074 0.99848069 0.99920791
+#  0.99962696 0.9998755  0.99996089 0.9999917  0.99999835 0.99999992 1.        ]
+# cumsum >= 0.95 [False  True  True  True  True  True  True  True  True  True  True  True True]
+# d:  2
 
 import matplotlib.pyplot as plt
 plt.plot(cumsum)

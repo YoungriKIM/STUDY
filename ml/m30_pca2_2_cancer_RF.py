@@ -1,16 +1,15 @@
-# pca를 이용해 차원을 축소해보자 / 압축률도 확인해보자
-# 고차원의 데이터를 저차원의 데이터로 환원시키는 기법. 400개 칼럼이면 200개로 압축하는 것!
+# pca를 이용해 차원을 축소해보자. / RF로 모델도 만들어서 비교해보자~
 
 import numpy as np
-from sklearn.datasets import load_diabetes, load_breast_cancer
+from sklearn.datasets import load_breast_cancer
 from sklearn.decomposition import PCA 
-#decomposition: 분해 / PCA: 주성분분석(Principal Component Analysis) 
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
 
 dataset = load_breast_cancer()
 x = dataset.data
 y = dataset.target
-print(x.shape, y.shape)     #(442, 10) (442,)
+print(x.shape, y.shape)    #(442, 10) (442,)
 
 #-----------------------------------------------------------------------------------
 # # n_components = n 으로 압축할 열 개수를 지정할 수 있다.

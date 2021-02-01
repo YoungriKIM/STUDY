@@ -1,7 +1,8 @@
 # pca를 이용해 차원을 축소해보자.
 # 고차원의 데이터를 저차원의 데이터로 환원시키는 기법. 400개 칼럼이면 200개로 압축하는 것!
-# pca는 압축했을 때 압축률과 손시을 확인 / feature_importances 는 각 칼럼의 중요도로 둘은 다르니 알아서 써라~
+# pca는 압축했을 때 압축률과 손실을 확인 / feature_importances 는 각 칼럼의 중요도로 둘은 다르니 알아서 써라~
 # 하지만 pca는 특성자체를 건드린다는 것 주의
+# https://excelsior-cjh.tistory.com/167
 
 import numpy as np
 from sklearn.datasets import load_diabetes

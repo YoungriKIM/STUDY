@@ -1,5 +1,6 @@
 # pca를 이용해 차원을 축소해보자 / 압축률도 확인해보자
 # 고차원의 데이터를 저차원의 데이터로 환원시키는 기법. 400개 칼럼이면 200개로 압축하는 것!
+# 5개 세트 만들어라
 
 import numpy as np
 from sklearn.datasets import load_diabetes
@@ -41,7 +42,7 @@ print('cumsum: ', cumsum)
 d = np.argmax(cumsum >= 0.95)+1
 # 다차원 배열에서 가장 큰 값의 인덱스들을 반환해주는 함수
 print('cumsum >= 0.95', cumsum >=0.95)      # cumsumdl 0.95 이상인 애들을 True로 반환
-print('d: ', d)
+print('d: ', d)                             # 몇개로 압축했을 땨 0.95 이상이 되는지
 # ================================================================
 # cumsum >= 0.95 [False False False False False False False  True  True  True]
 # d:  8
