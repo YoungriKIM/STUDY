@@ -1,6 +1,5 @@
-# feature_importances가 0인 컬럼들을 제거하여 데이터셋을 재구성 후
-# Randomforest 모델을 돌려서 acc 확인!
-# 중요도 25% 미만인 애들 제거해라!
+# XGB를 설치해서 돌리고 컬럼 중요도를 비교해보자
+# GradientBoost와 같은 계열이다
 
 
 import numpy as np

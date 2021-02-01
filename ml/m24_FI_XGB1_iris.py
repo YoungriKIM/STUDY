@@ -2,16 +2,21 @@
 # GradientBoost와 같은 계열이다
 # 우선 커맨드 창에 pip xgboost install 을 입력해서 다운을 해야 한다.
 # 설치되었는지 확인하고 싶으면 커맨드창에 pip list
+# 이 파일에서는 n_jobs 설정 수에 따른 차이를 확인해봄
+
+# xgboost는 통상적으로 다른 머신러닝보다 오래걸리고 무겁다
+# 하여 더 가볍게 업그레이드 된 것이 LightGBM: Light Gradient Boosting Machine
 
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier   #Extreme Gradient Boosting의 약자
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
+import timeit # (n_jobs = -1,8,2,4,6) 비교
 
 #1. 데이터 지정, 전처리
 dataset = load_iris()
@@ -19,8 +24,13 @@ x = dataset.data
 y = dataset.target
 x_train,x_test,y_train,y_test = train_test_split(x, y, test_size=0.2, random_state=519)
 
+#-----------------------------------------------------------------------------------
+start_t = timeit.default_timer()
+#-----------------------------------------------------------------------------------
+
+
 #2. 모델(모델1)
-model = XGBClassifier(n_jobs=-1) # cpu 코어를 모두 쓰겠다.
+model = XGBClassifier(n_jobs= 1) # cpu 코어를 모두 쓰겠다.
 
 #3. 컴파일ㄴ 훈련ㅇ
 model.fit(x_train, y_train)
@@ -42,7 +52,7 @@ def plot_feature_importances_datasets(model):
     plt.ylim(-1, n_features)
 
 plot_feature_importances_datasets(model)
-plt.show()
+# plt.show()
 
 
 # 남길 개수 정하고 솎는 함수(수현)
@@ -69,10 +79,15 @@ print('feature_names_2: \n',cut_columns(model.feature_importances_, dataset.feat
 x2_train, x2_test, y_train, y_test = train_test_split(x2.values, y, test_size = 0.2, shuffle=True, random_state= 519)
 
 #2. 모델1과 동일
-model2 = XGBClassifier(n_jobs=-1) # cpu 코어를 모두 쓰겠다.
+model2 = XGBClassifier(n_jobs= 1) # cpu 코어를 모두 쓰겠다.
 
 #3. 컴파일ㄴ 훈련ㅇ
 model2.fit(x2_train, y_train)
+
+#-----------------------------------------------------------------------------------
+end_t = timeit.default_timer()
+print('걸린 시간은 %f초 ' % (end_t - start_t))
+#-----------------------------------------------------------------------------------
 
 #4. 평가(스코어)
 score_2 = model2.score(x2_test, y_test)
@@ -113,3 +128,11 @@ print('score_2: ', score_2)
 # m24
 # score_1:  0.9333333333333333
 # score_2:  0.9333333333333333
+
+# =========================================================
+# n_jobs = 1            걸린 시간은 0.186884초 
+# n_jobs = 2            걸린 시간은 0.206572초
+# n_jobs = 4            걸린 시간은 0.208239초
+# n_jobs = -1 = 8       걸린 시간은 0.198980초
+# 확실하게 한 수가 압도적으로 좋다는 결론을 내릴 수는 없다.
+# 이것도 역시 파라미터 튜닝이다

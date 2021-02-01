@@ -1,5 +1,5 @@
-# feature_importances_를 이용해 칼럼별 중요도를 그래프로 출력해보고
-# 중요도가 적은 칼럼을 삭제하여 기존과 비교해보자
+# XGB를 설치해서 돌리고 컬럼 중요도를 비교해보자
+# GradientBoost와 같은 계열이다
 
 import numpy as np
 import pandas as pd
@@ -10,6 +10,8 @@ from xgboost import XGBClassifier, XGBRegressor
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
+import timeit # (n_jobs = -1,8,2,4,6) 비교
+
 
 #1. 데이터 지정, 전처리
 dataset = load_diabetes()
