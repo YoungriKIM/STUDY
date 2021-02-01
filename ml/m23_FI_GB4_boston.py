@@ -2,10 +2,6 @@
 # Randomforest 모델을 돌려서 acc 확인!
 # 중요도 25% 미만인 애들 제거해라!
 
-
-# feature_importances_를 이용해 칼럼별 중요도를 그래프로 출력해보고
-# 중요도가 적은 칼럼을 삭제하여 기존과 비교해보자
-
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_boston
