@@ -90,7 +90,7 @@ print('애큐러시 스코어: ', accuracy_score(y_pred, y_test))
 # loss:  [0.2978833317756653, 0.9678000211715698]
 
 # m34_2 pca 1.0 이상으로 지정한 파일 > XGBoost < GridSearch
-# colab ing
+# 모델 스코어:  0.9156
 
 # m34_2 pca 1.0이상으로 지정한 파일 > XGBoost < RandomizedSearch
 # 모델 스코어:  0.9125
