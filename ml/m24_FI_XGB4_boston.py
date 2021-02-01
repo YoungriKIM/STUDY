@@ -1,7 +1,6 @@
 # XGB를 설치해서 돌리고 컬럼 중요도를 비교해보자
 # GradientBoost와 같은 계열이다
 
-
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_boston

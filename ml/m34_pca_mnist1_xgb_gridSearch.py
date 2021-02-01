@@ -14,7 +14,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, RandomizedSearchCV
 import warnings
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, accuracy_score
 warnings.filterwarnings('ignore')
 
 #1. x 데이터 불러오고 pca적용 ===================================
@@ -61,7 +61,7 @@ parameters = [
     {'n_jobs' : [-1,2,4]}
 ]
 
-model = GridSearchCV(RandomForestClassifier(), parameters)
+model = RandomizedSearchCV(RandomForestClassifier(), parameters)
 
 #3. 훈련
 model.fit(x_train, y_train)
@@ -69,7 +69,7 @@ model.fit(x_train, y_train)
 print('최적의 매개변수: ', model.best_estimator_)
 
 y_pred = model.predict(x_test)
-print('최종정답률: ', r2_score(y_pred, y_test))
+print('최종정답률: ', accuracy_score(y_pred, y_test))
 
 # ==============================================================================
 # 40-2 mnist CNN
@@ -88,4 +88,8 @@ print('최종정답률: ', r2_score(y_pred, y_test))
 
 # m34_1 pca 0.95이상으로 지정한 파일 > XGBoost < GridSearch
 # 최적의 매개변수:  RandomForestClassifier(n_estimators=200)
-# 최종정답률:  0.8916875361901737
+# 최종정답률:  0.9517
+
+# m34_1 pca 0.95이상으로 지정한 파일 > XGBoost < RandomizedSearch
+# 최적의 매개변수:  RandomForestClassifier(n_estimators=200)
+# 최종정답률:  0.9505

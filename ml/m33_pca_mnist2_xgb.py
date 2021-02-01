@@ -1,15 +1,13 @@
-# m31로 만든 1.0 n_component를 사용하여
-# XGB(디폴트) 모델을 만들 것
+# m31로 만든 0.95 n_component를 사용하여
+# dnn 모델을 만들 것
+# 기존의 mnist dnn 파일보더 성능을 좋게 만들어라~ + cnn과 비교도 해
 
 
 import numpy as np
 from tensorflow.keras.datasets import mnist
 from sklearn.decomposition import PCA 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
-import warnings
-warnings.filterwarnings('ignore')
 
 #1. x 데이터 불러오고 pca적용 ===================================
 (x_train, _), (x_test, _) = mnist.load_data()
@@ -92,9 +90,7 @@ print('y_test: ', y_test[:10].argmax(axis=1))
 # y_test:  [7 2 1 0 4 1 4 9 5 9]
 
 # m32_1 pca 0.95이상으로 지정한 파일
-# loss:  [0.10606709122657776, 0.9678000211715698]
+# loss:  [0.2978833317756653, 0.9678000211715698]
 
 # m32_2 pca 1.0 이상으로 지정한 파일
 # loss:  [0.2978833317756653, 0.9678000211715698]
-
-# m33_2 pca 1.0이상으로 지정한 파일 > XGBoost

@@ -1,0 +1,42 @@
+http://machinelearningkorea.com/2019/09/29/lightgbm-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0/
+
+XGBoost(Extreme Gradient Boosting)
+Gradientboost계열로 Tree_ensembles 계열(=Forest)
+
+불러오기
+from xgboost import XGBClassifier, XGBRegressor
+
+튜닝이 꼭 필요한 파라미터
+min_child_weight / max_depth / gamma
+
+파라미터
+[General Parameters]
+booster[default = gbtree] 
+사용할 부스터. tree기반의 gbtree, linear기반 gblinear, 대부분 트리를 사용한다.
+verbosity[default = 1]
+0, 1, 2, 3으로 나뉨
+nthread[default = 사용 가능한 최대 스레드 수]
+병렬 스레드 수
+n_jobs[default = None]
+모델을 돌릴 때 쓰이는 코어의 수
+
+
+[Parameters for Tree Booster]
+eta[default = 0.3] = learning_rate
+learning_rate와 같음. 범위[0,1]
+gamma[default = 0] = min_split_loss
+추가 노드를 만들 때 필요한 최소 손실 감소. 범위[0, ∞]
+max_depth[default = 6](CV 쓸 때 튜닝)
+트리의 최대 깊이. 이 값이 너무 크면 과적합 될 가능성이 높아진다. 
+min_child_weight [default=1](CV 쓸 때 튜닝)
+관측치에 대한 가중치 합의 최소.
+n_estimators = int
+트리의 개수
+
+[fit 에 들어가는 parameters]
+eval_set = [(x_train, y_train),(x_val, y_val)]
+validation_data와 비슷하게 이해
+eval_metrics = 'rmse', 'error', 'mae', 'logloss', 'merror','mlogloss','auc'
+val 에 적용되는 매트릭스
+early_stopping_round = n, m
+n번, m번 반복할 동안 갱신 안되면 멈춤
