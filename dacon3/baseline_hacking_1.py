@@ -27,6 +27,7 @@ test = pd.read_csv('../data/csv/dacon3/test.csv')
 # trian 데이터 지정 =======================
 x_train = train.drop(['id', 'digit', 'letter'], axis=1).values
 x_train = x_train.reshape(-1, 28, 28 , 1)
+
 # print(x_train.shape)    #(2048, 28, 28, 1)
 x_train = x_train/255
 
@@ -91,7 +92,7 @@ print(sub.head())
 
 # csv로 저장
 sub.to_csv('../data/csv/dacon3/baseline.csv', index = False)
-
 # =============================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
-
+# =============================================
+# score = 0.78921
