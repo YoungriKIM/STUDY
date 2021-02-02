@@ -1,4 +1,7 @@
-# 그래프로 그려서 확인해보자~
+# m37 가져와서 씀
+# XGBoost의 모델을 저장하자!
+# pickle로 !
+
 
 import numpy as np
 from xgboost import XGBClassifier, XGBRegressor
@@ -15,12 +18,12 @@ y = dataset['target']
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=311)
 
 #2. 모델
-model = XGBRegressor(n_estimators=1000, learning_rate=0.01, n_jobs=-1)
+model = XGBRegressor(n_estimators=100, learning_rate=0.01, n_jobs=-1)
 # n_estimator = 트리의 개수
 
 #3. 훈련
-model.fit(x_train, y_train, verbose=1, eval_metric=['rmse', 'logloss'], eval_set=[(x_train, y_train), (x_test, y_test)], early_stopping_rounds=20)
-# early_stopping_rounds= n  몇 번 돌고 끝낼래? / 기준은 eval_mtric의 마지막에 지정한 것
+model.fit(x_train, y_train, verbose=1, eval_metric=['rmse'], eval_set=[(x_train, y_train), (x_test, y_test)], early_stopping_rounds=20)
+# early_stopping_rounds= n  몇 번 돌고 끝낼래?
 
 #4. 평가
 aaa = model.score(x_test, y_test)
@@ -31,34 +34,25 @@ y_pred = model.predict(x_test)
 r2 = r2_score(y_test, y_pred)
 print('r2: ', r2)
 
-
-print('----------------------------------------')
-# 딥러닝 모델처럼(핏을 hist로 반환) evals를 반환해서 그것을 지표로 early stop을 할 수 없을까? > 그래프로도 그려보자
+# 딥러닝 모델처럼(핏을 hist로 반환) evals를 반환해서 그것을 지표로 early stop을 할 수 없을까?
 result = model.evals_result()
-print(result)
+# print(result)
 
-import matplotlib.pyplot as plt
+#--------------------------------------------------------------------------------------------------------
+# 파이썬에서 제공하는 저장기능을 쓰자!
+import pickle
 
-epochs = len(result['validation_0']['rmse'])
-x_axis = range(0, epochs)
+# 저장
+# pickle.dump(model, open('../data/xgb_save/m39.pickle.dat', 'wb'))     # write binary
+# print('=====save complete=====')
 
-# 첫번째 그래프
-fig, ax = plt.subplots()
-ax.plot(x_axis, result['validation_0']['rmse'], label = 'Train')
-ax.plot(x_axis, result['validation_1']['rmse'], label = 'Test')
-ax.legend()
-plt.ylabel('Rmse')
-plt.title('XGBoost Rmse')
-plt.show()
+# 불러오기
+model2 = pickle.load(open('../data/xgb_save/m39.pickle.dat', 'rb'))     # read binary
+print('======read complete=====')
 
-# 두번째 그래프
-fig, ax = plt.subplots()
-ax.plot(x_axis, result['validation_0']['logloss'], label = 'Train')
-ax.plot(x_axis, result['validation_1']['logloss'], label = 'Test')
-ax.legend()
-plt.ylabel('Log Loss')
-plt.title('XGBoost Log Loss')
-plt.show()
+r22 = model2.score(x_test, y_test)
+print('score2: ', r22)
+
 
 #==============================================
 # score:  -5.430562540704325
