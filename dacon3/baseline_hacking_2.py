@@ -16,8 +16,8 @@ from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPool2D, BatchNorm
 from sklearn.model_selection import train_test_split
 
 # 데이터 맨 처음 지정 ===================
-train = pd.read_csv('/content/drive/MyDrive/colab_data/dacon3/train.csv')
-test = pd.read_csv('/content/drive/MyDrive/colab_data/dacon3/test.csv')
+train = pd.read_csv('../data/csv/dacon3/train.csv')
+test = pd.read_csv('../data/csv/dacon3/test.csv')
 
 # trian 데이터 지정 =======================
 # x_train 지정
@@ -32,21 +32,8 @@ for i , digit in enumerate(y):
 # print(x_train.shape)  #(2048, 784)
 # print(y_train.shape)  #(2048, 10)
 
-# train 데이터 split
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=0.8, shuffle =True, random_state=311)
-
-# print(x_train.shape)
-# print(x_val.shape)
-# print(y_train.shape)
-# print(y_val.shape)
-# (1638, 784)
-# (410, 784)
-# (1638, 10)
-# (410, 10)
-
 # 리쉐잎 + scaler
 x_train = x_train.reshape(-1, 28, 28 , 1)/255
-x_val = x_val.reshape(-1, 28, 28 , 1)/255
 
 # 모델 구성 =========================
 def mymodel(x_train):
@@ -71,21 +58,28 @@ def mymodel(x_train):
 # 컴파일, 훈련 =========================
 model = mymodel(x_train)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=2000, verbose=1, validation_data=(x_val, y_val))
+
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+stop = EarlyStopping(monitor='val_accuracy', patience=64, mode='max')
+reduce_lr = ReduceLROnPlateau(monitor = 'val_accuracy', patience=32, factor=0.5, verbose=1)
+mc = ModelCheckpoint(filepath='../data/modelcheckpoint/dacon3/baseline_0202_1.hdf5',\
+    monitor='val_accuracy', save_best_only=True, mode='auto')
+
+model.fit(x_train, y_train, batch_size=32, epochs=2000, verbose=1, validation_split=0.2, callbacks=[stop, mc, reduce_lr])
 
 # 평가ㄴ 예측ㅇ + sub저장 =========================
 x_test = test.drop(['id', 'letter'], axis=1).values
 x_test = x_test.reshape(-1, 28, 28, 1)/255
 
-sub = pd.read_csv('/content/drive/MyDrive/colab_data/dacon3/submission.csv')
+sub = pd.read_csv('../data/csv/dacon3/submission.csv')
 sub['digit'] = np.argmax(model.predict(x_test), axis = 1)
 print(sub.head())
 
-sub.to_csv('/content/drive/MyDrive/colab_data/dacon3/baseline_0203_1', index = False)
+sub.to_csv('../data/csv/dacon3/baseline_0203_1.csv', index = False)
 
 # =============================================
 print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
 # =============================================
 
 # epochs 수정하고 저장해라!
-# colab ing
+# mycom > 0.8578431373	
