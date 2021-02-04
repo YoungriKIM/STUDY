@@ -167,4 +167,4 @@ print('======save complete=====')
 #=====================================================
 # epochs = 2000 > 3th_0202_2.csv > dacon score : 0.1078431373  이런 trash
 # 03 수정중 > test 부분 imagegenerate 안하고 (n, 28, 28 ,1)로 넣음 > 3th_0202_3 > daconscore : 0.9264705882	
-# 1st가 한 것 처럼 resizing + 3th 모델 = 1st_01.csv > ing
+# 1st가 한 것 처럼 resizing + 3th 모델 = 1st_01.csv >  1st_01 > daconscore : 0.9264705882 > 리사이징 큰 효과 없음 
