@@ -17,13 +17,13 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle
 
 #2. 모델 구성
 def build_model(drop=0.2, optimizer='adam'):
-    inputs = Input(shape=(x_train.shape[1]), name='input')
-    x = Dense(256, activation='relu', name='hidden1')(inputs)
+    inputs = Input(shape=(x_train.shape[1],), name='input')
+    x = Dense(42, name='hidden1')(inputs)
     x = Dropout(drop)(x)
-    x = Dense(128, activation='relu', name='hidden2')(x)
-    x = Dense(64, activation='relu', name='hidden3')(x)
-    x = Dense(32, activation='relu', name='hidden4')(x)
-    x = Dense(32, activation='relu', name='hidden5')(x)
+    x = Dense(84, name='hidden2')(x)
+    x = Dense(84, name='hidden3')(x)
+    x = Dense(84, name='hidden4')(x)
+    x = Dense(42, name='hidden5')(x)
     outputs = Dense(1, name='outputs')(x)
     model = Model(inputs = inputs, outputs = outputs)
     model.compile(loss = 'mse', optimizer=optimizer, metrics=['mae'])
@@ -36,8 +36,8 @@ model2 = KerasRegressor(build_model, verbose=1)
 
 # 하이퍼파라미터 지정
 def create_hyperparameters():
-    batches = [28, 34, 42, 24]
-    optimizers = ['rmsprop', 'adam', 'adadelta']
+    batches = [28, 34, 42, 24, 10]
+    optimizers = ['rmsprop', 'adadelta', 'adam']
     dropouts = [0.1, 0.2, 0.3]
     return {'batch_size': batches, 'optimizer': optimizers, 'drop': dropouts}
 hyper = create_hyperparameters()
@@ -59,4 +59,4 @@ print('best_params_: ', search.best_params_)
 # ----------------------------------------------------------------
 score = search.score(x_test, y_test)
 print('최종 스코어: ', score)
-# 최종 스코어:  -3070.414794921875
+# 최종 스코어:  -3143.755859375

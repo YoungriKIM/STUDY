@@ -36,6 +36,7 @@ model2 = build_model()
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 model2 = KerasClassifier(build_fn=build_model, verbose=1)
 # 모델을 그냥 집어 넣으면 안되고 이렇게 싸주어야 랜덤서치나 그리드서치가 인식할 수 있다.
+# 케라스에 여러 변수를 지정해서 머신러닝으로 돌리고 싶기 때문에 이렇게 합치는 것!
 
 def create_hyperparameters():
     batches = [10, 20, 30, 40, 50]
@@ -54,21 +55,20 @@ search.fit(x_train, y_train, verbose=1)
 # raise TypeError
 # TypeError: If no scoring is specified, the estimator passed should have a 'score' method.
 # The estimator <tensorflow.python.keras.engine.functional.Functional object at 0x00000182B1072EE0> does not.
-# 형태가 안 맞아서 안 된다! 딥러닝 모델을 머신러닝 모델로 wrap 해야 한다! 31번 줄 확인~
+# 형태가 안 맞아서 안 된다! 딥러닝 모델을 머신러닝 모델로 wrap 해야 한다! 36번 줄 확인~
 
 # ----------------------------------------------------------------
-print('best_params_: ', search.best_params_)
-# 이 모델에서 내가 설정한(36번~40번 3개)에서 최고만 알려주고
+print('best_params_: ', search.best_params_) # 이 모델에서 내가 설정한(36번~40번 3개)에서 최고만 알려주고
 # {'optimizer': 'adam', 'drop': 0.2, 'batch_size': 50}
 # 내가 더 튜닝할 수 있는건.. 엑티베이션, 러닝레이트..레이어..등
 # ----------------------------------------------------------------
-# print('best_estimator_: ', search.best_estimator_)
-# 얘는 설정할 수 있는 모든 파라미터에서 최고를 보여준다. 그런데 머신러닝이 딥러닝 모델의 파라미터를 전부 인식할 수 없을걸?
+# print('best_estimator_: ', search.best_estimator_) # 얘는 설정할 수 있는 모든 파라미터에서 최고를 보여준다. 그런데 머신러닝이 딥러닝 모델의 파라미터를 전부 인식할 수 없을걸?
 # best_estimator_:  <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x000001E602CD9BB0>
 # ----------------------------------------------------------------
 # print('best_score_: ', search.best_score_)
-#이건 뭐게?
+#이건 뭐게?: 가장 잘나온 스코어 반환
 # best_score_:  0.9590666691462199
+# ----------------------------------------------------------------
 
 acc = search.score(x_test, y_test)
 print('최종 스코어: ', acc)

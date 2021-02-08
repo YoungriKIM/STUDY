@@ -35,8 +35,14 @@ model2 = build_model()
 
 # 딥러닝 모델을 머신러닝 모델형태로 싸주자!
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
-model2 = KerasClassifier(build_fn=build_model, verbose=1, batch_size=32, epochs=1)
-# 모델을 그냥 집어 넣으면 안되고 이렇게 싸주어야 랜덤서치나 그리드서치가 인식할 수 있다.
+
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+stop = EarlyStopping(monitor='val_loss', patience=5, mode='min')
+reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=3, factor=0.5, verbose=1)
+modelpath = '../data/modelcheckpoint/k65_pipe_line_{epoch:02d}-{val_loss:.4f}.hdf5'
+mc = ModelCheckpoint(filepath=modelpath, save_best_only=True, verbose=1)
+
+model2 = KerasClassifier(build_fn=build_model, verbose=1, batch_size=32, epochs=1, callbacks=[stop, reduce_lr, mc])
 
 # 파이프라인 정의
 pipeline = Pipeline([('scaler', MinMaxScaler()), ('clf', model2)])
@@ -53,6 +59,7 @@ search = RandomizedSearchCV(pipeline, hyperparameters, cv = 3)
 # 랜덤서치는 디폴트가 10 거기에 cv는 3 해서 10*3 = 30번 돌아갈 것!
 
 # ----------------------------------------------------------------
+# 훈련
 search.fit(x_train, y_train)
 
 # ----------------------------------------------------------------
