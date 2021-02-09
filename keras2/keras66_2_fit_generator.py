@@ -105,4 +105,4 @@ plt.show()
 print('acc: ', acc[-1])
 # acc:  0.949999988079071
 
-print('val_acc: ', val_acc[:-1])
+print('val_acc: ', val_acc[:-1])    # 전체가 다 나온다
