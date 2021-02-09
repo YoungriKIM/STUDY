@@ -1,4 +1,5 @@
 # (두둥) 드디어 딥러닝모델과 머신러닝을 엮어보자
+# 후에는 레이어와 노드수까지 자동으로 튠을 해주는 오토케라스를 배운다.
 
 import numpy as np
 from tensorflow.keras.models import Sequential, Model
