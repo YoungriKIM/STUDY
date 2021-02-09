@@ -18,7 +18,7 @@ train_datagen = ImageDataGenerator(
     height_shift_range=0.1,     # 수직 이동
     # rotation_range=5,           # 회전
     # zoom_range=1.2,             # 확대
-    # shear_range=0.7,            # 층 밀리기 강도
+    # shear_range=0.7,            # 왜곡
     # fill_mode='nearest'         # 빈자리는 근처에 있는 것으로(padding='same'과 비슷)
 )
 

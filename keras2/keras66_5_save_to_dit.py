@@ -13,7 +13,7 @@ train_datagen = ImageDataGenerator(
     height_shift_range=0.1,     # 수직 이동
     rotation_range=5,           # 회전
     zoom_range=1.2,             # 확대
-    shear_range=0.7,            # 층 밀리기 강도
+    shear_range=0.7,            # 왜곡
     fill_mode='nearest'         # 빈자리는 근처에 있는 것으로(padding='same'과 비슷)
 )
 
@@ -30,7 +30,8 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 xy_train = train_datagen.flow_from_directory(
     '../data/image/brain/train',  
     target_size=(150,150),    
-    batch_size=5,                                           # 
+    batch_size=5,                       # batch_size(5) * 아래 변수 건드린 횟수(나는 5) = 생성되는 이미지 개수(25개) > 이렇게 증폭이 가능
+                                        # batch_size의 최대수는 160인데, 200처럼 더 큰 수를 지정해도 알아서 160(최대) * 변수건드린횟수 로 만들어 진다.
     class_mode='binary'         
     , save_to_dir='../data/image/brain_generator/train'     # ※caution※ 아래 찍어보자 부분처럼 변수를 한 번 건드려주어야 잘 저장이 된다!
 )    
