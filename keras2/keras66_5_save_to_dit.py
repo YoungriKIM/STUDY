@@ -1,4 +1,5 @@
 # 이미지데이터를 불러와서 증폭을 해보자! > 저엉말로 증폭을 해서 저장해보자
+# 37번째 줄이 주요 키워드!
 
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator

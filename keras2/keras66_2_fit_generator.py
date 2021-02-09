@@ -1,5 +1,11 @@
 # 이미지데이터를 불러와서 증폭을 해보자! > 적용한 걸 훈련시키자
 # 튠 알아서 완성 시켜~
+# 
+# Question : 증폭 된 이미지가 들어갔다는 증거를 찾아봐라!
+# Answer: 데이터셋 자체가 증폭되는 것이 아니라 매 에폭마다 내가 지정한 데이터(우리의 경우는 steps_per_epoch=32)의 수 만큼의 매번 다른 ImageDataGenerator된 이미지가 들어간다.
+# 1 epoch > 100개의 변형된 이미지'
+# 2 epoch > 100개의 변형된 이미지''
+# 3 epoch > 100개의 변형된 이미지'''  ... 
 
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
