@@ -23,7 +23,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 xy_train = train_datagen.flow_from_directory(
     '../data/image/gender' 
     ,target_size=(56,56)
-    ,batch_size=45
+    ,batch_size=200
     ,class_mode='binary'
     ,subset='training'      
 )     
@@ -32,7 +32,7 @@ xy_train = train_datagen.flow_from_directory(
 xy_test = train_datagen.flow_from_directory(
     '../data/image/gender' 
     ,target_size=(56,56)
-    ,batch_size=40
+    ,batch_size=200
     ,class_mode='binary'
     ,subset='validation'
 )

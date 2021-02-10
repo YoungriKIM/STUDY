@@ -49,15 +49,21 @@ xy_test = train_datagen.flow_from_directory(
 # 훈련을 시켜보자! 모델구성 -----------------------------------------------------------------------------------------------------
 model = Sequential()
 model.add(Conv2D(32, (7,7), input_shape=(56,56,3), padding='same', activation='relu'))
-# model.add(BatchNormalization())
-# model.add(Conv2D(64, (2,2), padding='same', activation='relu'))
-# model.add(BatchNormalization())
-# model.add(Conv2D(32, (2,2), padding='same', activation='relu'))
 model.add(BatchNormalization())
+model.add(MaxPooling2D(2, strides=(2,2)))
+
+model.add(Conv2D(256, (3,3),strides=(1,1), activation='relu',padding="same"))
+model.add(BatchNormalization())
+
+model.add(Conv2D(256, (3,3),strides=(1,1), activation='relu',padding="same"))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(2, strides=(2,2)))
+
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(30, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
@@ -78,3 +84,4 @@ print("acc : ", acc)
 # 7,7
 # loss :  0.5769726037979126
 # acc :  0.7060518860816956
+

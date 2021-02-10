@@ -6,6 +6,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, MaxPooling2D, BatchNormalization, Flatten
 import matplotlib.pyplot as plt
+from keras.optimizers import Adam
 
 # npy로 불러오자 -----------------------------------------------------------------------------------------------------
 
@@ -19,28 +20,32 @@ print('===== load complete =====')
 
 # 훈련을 시켜보자! 모델구성 -----------------------------------------------------------------------------------------------------
 model = Sequential()
-model.add(Conv2D(32, (7,7), input_shape=(56,56,3), padding='same', activation='relu'))
+model.add(Conv2D(128, (7,7), input_shape=(x_train.shape[1:]), padding='same', activation='relu'))
 model.add(BatchNormalization())
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
-
 # 컴파일, 훈련
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.01), metrics=['acc'])
 
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-stop = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-lr = ReduceLROnPlateau(monitor='val_loss', factor=0.3, patience=10, mode='min')
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+stop = EarlyStopping(monitor='val_acc', patience=20, mode='auto')
+lr = ReduceLROnPlateau(monitor='val_lacc', factor=0.3, patience=10, mode='max')
+filepath = ('../data/modelcheckpoint/k67_-{val_acc:.4f}.hdf5')
+mc = ModelCheckpoint(filepath=filepath, save_best_only=True, verbose=1)
 
-model.fit(x_train, y_train, epochs=500, batch_size=32, verbose=1, validation_split=0.2)
+model.fit(x_train, y_train, epochs=1000, batch_size=32, verbose=1, validation_split=0.2, callbacks=[stop,lr,mc])
 
 #  ----------------------------------------------------------------------------------------------
 loss, acc = model.evaluate(x_test, y_test)
 print("loss : ", loss)
 print("acc : ", acc)
 
-# loss :  19.046550750732422
-# acc :  0.675000011920929
+# ===========================
+# loss :  1.562468409538269 7,7
+# acc :  0.6399999856948853
+
