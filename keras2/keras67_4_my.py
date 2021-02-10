@@ -109,5 +109,5 @@ print((my_pred3[0][0])*100,'%의 확률로 남자입니다.')
 my_pred4 = model.predict(madong_test)
 # print(my_pred4)  #[[0.88352615]]
 print('마동석은(두구두구)')
-print((my_pred4[0][0])*100,'%의 확률로 남자입니다.')
+print((my_pred4[0][0])*100,'%의 확률로 남자입니다.')    
 
