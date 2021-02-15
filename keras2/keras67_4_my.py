@@ -89,25 +89,21 @@ my_pred_no_answer = [1]     # 남자
 
 # 예측하기 _1
 my_pred = model.predict(my_test)
-# print(my_pred)  #[[2.142816e-06]]
 print('당신은(두구두구)')
-print((1-my_pred[0][0])*100,'%의 확률로 여자입니다.')
+print((1-my_pred[0][0])*100,'%의 확률로 여자입니다.')       #99.99978571840984 %의 확률로 여자입니다.
 
 # 예측하기 _2
 my_pred2 = model.predict(yeona_test)
-# print(my_pred2)  #[[2.142816e-06]]
 print('김연아는(두구두구)')
-print((1-my_pred2[0][0])*100,'%의 확률로 여자입니다.')
+print((1-my_pred2[0][0])*100,'%의 확률로 여자입니다.')      #99.99999874083656 %의 확률로 여자입니다.
 
 # 예측하기 _3
 my_pred3 = model.predict(actor_test)
-# print(my_pred3)  #[[6.970706e-05]]
 print('레오나르도 디카프리오는(두구두구)')
-print((my_pred3[0][0])*100,'%의 확률로 남자입니다.')
+print((my_pred3[0][0])*100,'%의 확률로 남자입니다.')        #0.0069707057264167815 %의 확률로 남자입니다.
 
 # 예측하기 _4
 my_pred4 = model.predict(madong_test)
-# print(my_pred4)  #[[0.88352615]]
 print('마동석은(두구두구)')
-print((my_pred4[0][0])*100,'%의 확률로 남자입니다.')    
+print((my_pred4[0][0])*100,'%의 확률로 남자입니다.')        #88.35261464118958 %의 확률로 남자입니다.
 
