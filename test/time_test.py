@@ -1,79 +1,94 @@
+# time_check
+
+import pandas as pd
 import numpy as np
-from sklearn.datasets import load_diabetes #당뇨병 수준
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+import tensorflow as tf
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPool2D, BatchNormalization
+from sklearn.model_selection import train_test_split
 import timeit
 
-#데이터 불러오고 , 이건 사이킷런의 데이터 불러오는 방법
-dataset = load_diabetes()
-x = dataset.data
-y = dataset.target
 
-print(x.shape, y.shape) #(442, 10) (442,)
-
-#트레인 테스트 분리
-from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.8, shuffle=True, random_state=66)
-from sklearn.model_selection import train_test_split
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size = 0.8, shuffle=True, random_state=66)
-
-#데이터 전처리 (MinMaxScaler를 이용해서 , 기준은 x_train으로)
-from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler()
-scaler.fit(x_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
-x_val = scaler.transform(x_val)
-
-x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
-x_val = x_val.reshape(x_val.shape[0], x_val.shape[1], 1)
-x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 
 # -------------------------------------------------------
 start_t = timeit.default_timer()
 # -------------------------------------------------------
 
-#모델 구성
-from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Input, Conv1D, MaxPooling1D, Flatten, Dropout
 
-model = Sequential()
-model.add(Conv1D(200, 1, input_shape=(10,1), activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-model.add(Dropout(0.2))
-model.add(Conv1D(100, 1))
-model.add(Conv1D(80, 1))
-model.add(Flatten())
-model.add(Dense(70))
-model.add(Dense(60))
-model.add(Dense(50))
-model.add(Dense(20))
-model.add(Dense(1))
+# 데이터 맨 처음 지정 ===================
+train = pd.read_csv('../data/csv/dacon3/train.csv')
+test = pd.read_csv('../data/csv/dacon3/test.csv')
 
-#컴파일, 훈련 (Earlystopping 적용)
-model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+# trian 데이터 지정 =======================
+# x_train 지정pip
+x_train = train.drop(['id', 'digit', 'letter'], axis=1).values
 
-from tensorflow.keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-model.fit(x_train, y_train, epochs=1000, batch_size=10, validation_data=(x_val, y_val), verbose=1, callbacks=[early_stopping])
+# y_train 지정 + 벡터화
+y = train['digit']
+y_train = np.zeros((len(y), len(y.unique())))
+for i , digit in enumerate(y):
+    y_train[i, digit] = 1
 
-#평가, 예측
-loss, mae = model.evaluate(x_test, y_test, batch_size=1)
-print('loss, mae: ', loss, mae)
+# print(x_train.shape)  #(2048, 784)
+# print(y_train.shape)  #(2048, 10)
 
-y_predict = model.predict(x_test)
+# 리쉐잎 + scaler
+x_train = x_train.reshape(-1, 28, 28 , 1)/255
 
-#RMSE와 R2 구하기
-from sklearn.metrics import mean_squared_error
-def RMSE(y_test, y_predict):
-      return np.sqrt(mean_squared_error(y_test, y_predict))
-print('RMSE: ', RMSE(y_test, y_predict))
+# 모델 구성 =========================
+def mymodel(x_train):
+    model = Sequential()
+    model.add(Conv2D(128, kernel_size=2, input_shape=(x_train.shape[1:]), strides=1, padding='same', activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Conv2D(128, 2, padding='same', activation='relu'))
+    model.add(MaxPool2D(2,2))
 
-from sklearn.metrics import r2_score
-R2 = r2_score(y_test, y_predict)
-print('R2: ', R2)
+    model.add(Conv2D(256, 2, padding='same', activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Conv2D(256, 2, padding='same', activation='relu'))
+    model.add(MaxPool2D(2,2))
+
+    model.add(Flatten())
+    model.add(Dense(1000, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(10, activation='softmax'))
+
+    return model
+
+# 컴파일, 훈련 =========================
+model = mymodel(x_train)
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+stop = EarlyStopping(monitor='val_accuracy', patience=64, mode='max')
+reduce_lr = ReduceLROnPlateau(monitor = 'val_accuracy', patience=32, factor=0.5, verbose=1)
+mc = ModelCheckpoint(filepath='../data/modelcheckpoint/dacon3/baseline_0202_1.hdf5',\
+    monitor='val_accuracy', save_best_only=True, mode='auto')
+
+model.fit(x_train, y_train, batch_size=32, epochs=100, verbose=1, validation_split=0.2, callbacks=[stop, mc, reduce_lr])
+
+# 평가ㄴ 예측ㅇ + sub저장 =========================
+x_test = test.drop(['id', 'letter'], axis=1).values
+x_test = x_test.reshape(-1, 28, 28, 1)/255
+
+sub = pd.read_csv('../data/csv/dacon3/submission.csv')
+sub['digit'] = np.argmax(model.predict(x_test), axis = 1)
+print(sub.head())
+
+sub.to_csv('../data/csv/dacon3/baseline_0203_1.csv', index = False)
+
+# =============================================
+print('(ง˙∇˙)ว {오늘 안에 조지고만다!!!]')
+# =============================================
 
 # -------------------------------------------------------
 end_t = timeit.default_timer()
 print('%f초 걸림' % (end_t - start_t))
 # -------------------------------------------------------
-# mycom time 8.882553초 걸림
-# acardemycom time : 8.676940초 걸림
+# timecheck
+# mycom : 100 56.927472초 걸림
+# acardemycom : 69.597122초 걸림
+# 연산이 긴 모델 일 수록 mycom이 더 적게 걸리는 양상

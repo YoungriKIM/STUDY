@@ -1,0 +1,3 @@
+https://machinelearningmastery.com/multi-label-classification-with-deep-learning/
+
+https://learnopencv.com/multi-label-image-classification-with-pytorch-image-tagging/
