@@ -1,4 +1,5 @@
 # xgb를 cpu가 아닌 gpu로 써보자 ! 대신 cuda가 10.1 이상이어야 한다.
+# 참고 사이트: https://xgboost.readthedocs.io/en/latest/gpu/index.html
 
 import numpy as np
 from xgboost import XGBClassifier, XGBRegressor
