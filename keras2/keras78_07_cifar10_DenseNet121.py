@@ -106,11 +106,16 @@ print('loss, acc:' ,loss)
 
 # 78_05  InceptionV3 ----------------------------
 # True
-# ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
+# ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)'
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.6404574513435364, 0.8590999841690063]
 
 # 78_06  InceptionResNetV2 ----------------------------
 # True
 # ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.6921852827072144, 0.829800009727478]
+
 
 # 78_07  DenseNet121 ----------------------------
 # True

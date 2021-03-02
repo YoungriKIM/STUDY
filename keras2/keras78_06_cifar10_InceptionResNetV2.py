@@ -4,7 +4,7 @@
 
 from tensorflow.keras.applications import InceptionResNetV2
 from tensorflow.keras.applications.vgg16 import preprocess_input
-from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.layers import Dense, Flatten, UpSampling2D
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.datasets import cifar10
 
@@ -30,16 +30,17 @@ x_train = x_train.astype('float32')/255.  # 전처리
 x_test = x_test.astype('float32')/255.  # 전처리
 
 # 모델 구성
-apl = InceptionResNetV2(weights='imagenet', include_top=False, input_shape=(32,32,3))
+apl = InceptionResNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
 apl.trainable =True
 
 model = Sequential()
+model.add(UpSampling2D(size=(3,3)))
 model.add(apl)
 model.add(Flatten())
 model.add(Dense(128))
 model.add(Dense(64))
 model.add(Dense(10, activation='softmax'))
-model.summary()
+# model.summary()
 
 # 컴파일, 훈련
 from tensorflow.keras.optimizers import Adam
@@ -95,7 +96,6 @@ print('loss, acc:' ,loss)
 # >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
 # loss, acc: [0.43911752104759216, 0.9021999835968018]
 
-
 # 78_03  ResNet50 ----------------------------
 # True
 # loss, acc: [1.1165250539779663, 0.7803999781608582]
@@ -106,9 +106,12 @@ print('loss, acc:' ,loss)
 
 # 78_05  InceptionV3 ----------------------------
 # True
-# ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
+# ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)'
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.6404574513435364, 0.8590999841690063]
 
 # 78_06  InceptionResNetV2 ----------------------------
 # True
 # ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
-
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.6921852827072144, 0.829800009727478]
