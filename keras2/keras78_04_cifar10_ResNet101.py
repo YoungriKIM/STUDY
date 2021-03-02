@@ -89,9 +89,11 @@ print('loss, acc:' ,loss)
 # True
 # loss, acc: [1.0089478492736816, 0.7914999723434448]
 
-# 78_02  Xception ----------------------------
-# ValueError: Input size must be at least 71x71; got `input_shape=(32, 32, 3)`
+# 78_02  Xception
 # 최소한의 크기가 71*71 이어야 한다는 뜻
+# ValueError: Input size must be at least 71x71; got `input_shape=(32, 32, 3)`
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.43911752104759216, 0.9021999835968018]
 
 # 78_03  ResNet50 ----------------------------
 # True
@@ -99,4 +101,4 @@ print('loss, acc:' ,loss)
 
 # 78_04  ResNet101 ----------------------------
 # True
-
+# loss, acc: [1.2699329853057861, 0.7462999820709229]

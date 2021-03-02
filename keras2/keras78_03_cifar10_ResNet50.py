@@ -90,9 +90,12 @@ print('y_test: ', y_test[:10].argmax(axis=1))
 # y_pred:  [3 8 8 8 6 6 1 6 3 1]
 # y_test:  [3 8 8 0 6 6 1 6 3 1]
 
-# 78_02  Xception ----------------------------
-# ValueError: Input size must be at least 71x71; got `input_shape=(32, 32, 3)`
+# 78_02  Xception
 # 최소한의 크기가 71*71 이어야 한다는 뜻
+# ValueError: Input size must be at least 71x71; got `input_shape=(32, 32, 3)`
+# >> upsampling 해서 [0],[1] 쉐잎에 *3 해서 들어갈거니 전이학습 선언 할 떄부터 (96,96,3)
+# loss, acc: [0.43911752104759216, 0.9021999835968018]
+
 
 # 78_03  ResNet50 ----------------------------
 # loss, acc: [1.1165250539779663, 0.7803999781608582]
