@@ -40,7 +40,7 @@ stop = EarlyStopping(monitor='val_loss', patience=10, mode='min')
 # 개수에 상관 없이 모두 돌아가게 된다. 선택적으로 하고 싶으면 공식문서 확인
 import tensorflow as tf
 strategy = tf.distribute.MirroredStrategy(cross_device_ops=\
-    tf.distribute.HierarchicalCopyAllReduce())
+    tf.distribute.HierarchicalCopyAllReduce())  # Hierarchical: 계층형
 # ----------------------------------------------------------------------------------
 
 with strategy.scope():

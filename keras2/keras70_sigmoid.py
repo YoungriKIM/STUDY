@@ -1,5 +1,9 @@
 # sigmoid 의 역할을 그림으로 그려보자
 
+# sigmiod
+# 0 ~ 1
+# 입력에 대해 무조건 0과 1 사이로 변환, 층을 거듭할 수록 값이 작아지는 문제(vanishing gradient)가 발생한다.
+
 import numpy as np
 import matplotlib.pyplot as plt
 
