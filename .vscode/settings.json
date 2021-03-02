@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
     "python.pythonPath": "C:\\Users\\lemon\\anaconda3\\python.exe",
     "python.autoComplete.addBrackets": true
+=======
+    "python.pythonPath": "C:\\Users\\Admin\\anaconda3\\python.exe"
+>>>>>>> 851ad95dd396ac0e0ae8c21af7749c12fe807018
 }

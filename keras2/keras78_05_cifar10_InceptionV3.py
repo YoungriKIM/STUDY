@@ -2,9 +2,9 @@
 # cifar10으로 vgg16 넣어서 만들 것! 결과치 비교
 # 깃허브 탐방!!!!!
 
-from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.applications import InceptionV3
 from tensorflow.keras.applications.vgg16 import preprocess_input
-from tensorflow.keras.layers import Dense, Flatten, Input
+from tensorflow.keras.layers import Dense, Flatten
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.datasets import cifar10
 
@@ -30,9 +30,8 @@ x_train = x_train.astype('float32')/255.  # 전처리
 x_test = x_test.astype('float32')/255.  # 전처리
 
 # 모델 구성
-input_tensor = Input(shape=(32, 32, 3))
-apl = EfficientNetB0(weights='imagenet', include_top=False,input_tensor = input_tensor)
-apl.trainable = True
+apl = InceptionV3(weights='imagenet', include_top=False, input_shape=(32,32,3))
+apl.trainable =True
 
 model = Sequential()
 model.add(apl)
@@ -108,24 +107,3 @@ print('loss, acc:' ,loss)
 # 78_05  InceptionV3 ----------------------------
 # True
 # ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
-
-# 78_06  InceptionResNetV2 ----------------------------
-# True
-# ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
-
-# 78_07  DenseNet121 ----------------------------
-# True
-# loss, acc: [0.8062302470207214, 0.829800009727478]
-
-# 78_08  MobileNetV2 ----------------------------
-# True
-# loss, acc: [1.0046191215515137, 0.7753999829292297]
-
-# 78_09  NASNetMobile ----------------------------
-# True
-# input_tensor 로 성정
-# loss, acc: [3992.26513671875, 0.45899999141693115]
-
-# 78_010  EfficientNetB0 ----------------------------
-# True
-# loss, acc: [6.4494242668151855, 0.1014999970793724]
