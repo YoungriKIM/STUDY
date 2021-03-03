@@ -1,4 +1,4 @@
-# 샘이 같이 해준거
+# 데이터 셋을 가져와서 해보자
 
 from tensorflow.keras.datasets import reuters
 import numpy as np
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # 46개의 토픽의 라벨을 갖고 있는 11.284개의 뉴스 속 문장 데이터이다.
 
 (x_train, y_train), (x_test, y_test) = reuters.load_data(
-    num_words=10000, test_split=0.2
+    num_words=1000, test_split=0.2
 )
 # reuters > 영국의 로이터 통신사
 # num_word = 처음부터 불러올 단어의 수를 지정할 수 있다!
@@ -77,59 +77,55 @@ print(' '.join([index_to_word[index] for index in x_train[0]]))
 # the of of mln loss for plc said at only ended said of could 1 traders now april 0 a after said from 1985 and from foreign 000 april\
 # 0 prices its account year a but in this mln home an states earlier and rise and revs vs 000 its 16 vs 000 a but 3 of of several\
 # and shareholders and dividend vs 000 its all 4 vs 000 1 mln agreed of april 0 are 2 states will billion total and against 000 pct dlrs
-print('==============================')
 
-# y 카테고리 갯수 출력
-category = np.max(y_train) + 1
-print('y 카테고리의 개수: ', category)
-# y 카테고리의 개수:  46
 
-# y 유니크한 값 출력
-y_bunpo = np.unique(y_train)
-print(y_bunpo)
-# [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-#  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45]
-print('==============================')
+# ==========================================================
+# 지금부터는 알아서
 
-# 전처리 해주자
+# 전처리
 # 패딩(길이는 아까 그래프보고 확인한 500으로 하자)
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-x_train = pad_sequences(x_train, padding='pre', maxlen=100, truncating='pre')
-x_test = pad_sequences(x_test, padding='pre', maxlen=100, truncating='pre')
-print(x_train.shape, x_test.shape)
-# (8982, 100) (2246, 100)
+pad_x_train = pad_sequences(x_train, padding='pre', maxlen=400, truncating='pre')
+pad_x_test = pad_sequences(x_test, padding='pre', maxlen=400, truncating='pre')
 
 # y 벡터화
-# from tensorflow.keras.utils import to_categorical
-# y_train = to_categorical(y_train)
-# y_test = to_categorical(y_test)
-# print(y_train.shape, y_test.shape)
-# (8982, 46) (2246, 46)
+from tensorflow.keras.utils import to_categorical
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
+# 이쯤에서 쉐잎 한 번 확인
+print(pad_x_train.shape)
+print(pad_x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+# (8982, 500)
+# (2246, 500)
+# (8982, 46)
+# (2246, 46)
 
 # 모델 구성
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, LSTM, Flatten, Conv1D
 
 model = Sequential()
-model.add(Embedding(input_dim=10000, output_dim=64, input_length=100))
-model.add(LSTM(32))
-model.add(Dense(46, activation='softmax'))
+model.add(Embedding(input_dim=1000, output_dim=100, input_length=400))
+model.add(LSTM(100, activation='tanh'))
+model.add(Dense(46,activation='softmax'))
 model.summary()
 
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
-# y 카테고리컬을 끄고! sparse_categorical_crossentropy 을 써보자
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
-# 이제 다중 분류할 때 쓸 수 있는 로스가 하나 더 생겼다!
+# 3. 컴파일, 훈련
+model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['acc'])
 
-model.fit(x_train, y_train, epochs=10, batch_size=32, verbose=1)
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+stop = EarlyStopping(monitor='loss', patience=16, mode='min')
+reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=8, verbose=1, factor=0.5)
 
-result = model.evaluate(x_test, y_test)
-print(result)
+model.fit(pad_x_train, y_train, epochs=1000, batch_size=32, validation_split=0.2, verbose=1, callbacks=[stop, reduce_lr])
 
-# ===================================
-# categorical_crossentropy
-# [1.493270993232727, 0.6682991981506348]
-# sparse_categorical_crossentropy
-# [1.57481050491333, 0.6513802409172058]
+#4. 평가, 예측
+loss = model.evaluate(pad_x_test, y_test, batch_size=32)
+print('loss: ', loss)
 
+# ======================================
+# loss:  [1.4431557655334473, 0.7564558982849121]
