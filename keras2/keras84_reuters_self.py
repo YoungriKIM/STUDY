@@ -1,4 +1,4 @@
-# 샘이 같이 해준거
+# 알아서 로터스 데이터로 해봐~
 
 from tensorflow.keras.datasets import reuters
 import numpy as np
@@ -77,15 +77,52 @@ print(' '.join([index_to_word[index] for index in x_train[0]]))
 # the of of mln loss for plc said at only ended said of could 1 traders now april 0 a after said from 1985 and from foreign 000 april\
 # 0 prices its account year a but in this mln home an states earlier and rise and revs vs 000 its 16 vs 000 a but 3 of of several\
 # and shareholders and dividend vs 000 its all 4 vs 000 1 mln agreed of april 0 are 2 states will billion total and against 000 pct dlrs
-print('==============================')
 
-# y 카테고리 갯수 출력
-category = np.max(y_train) + 1
-print('y 카테고리의 개수: ', category)
-# y 카테고리의 개수:  46
 
-# y 유니크한 값 출력
-y_bunpo = np.unique(y_train)
-print(y_bunpo)
-# [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-#  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45]
+# ==========================================================
+# 지금부터는 알아서
+
+# 전처리
+# 패딩(길이는 아까 그래프보고 확인한 500으로 하자)
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+pad_x_train = pad_sequences(x_train, padding='pre', maxlen=400, truncating='pre')
+pad_x_test = pad_sequences(x_test, padding='pre', maxlen=400, truncating='pre')
+
+# y 벡터화
+from tensorflow.keras.utils import to_categorical
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
+# 이쯤에서 쉐잎 한 번 확인
+print(pad_x_train.shape)
+print(pad_x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+# (8982, 500)
+# (2246, 500)
+# (8982, 46)
+# (2246, 46)
+
+# 모델 구성
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Embedding, LSTM, Flatten, Conv1D
+
+model = Sequential()
+model.add(Embedding(input_dim=1000, output_dim=100, input_length=400))
+model.add(LSTM(100, activation='tanh'))
+model.add(Dense(46,activation='softmax'))
+model.summary()
+
+
+# 3. 컴파일, 훈련
+model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['acc'])
+
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+stop = EarlyStopping(monitor='loss', patience=16, mode='min')
+reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=8, verbose=1, factor=0.5)
+
+model.fit(pad_x_train, y_train, epochs=1000, batch_size=32, validation_split=0.2, verbose=1, callbacks=[stop, reduce_lr])
+
+#4. 평가, 예측
+loss = model.evaluate(pad_x_test, y_test, batch_size=32)
+print('loss: ', loss)
