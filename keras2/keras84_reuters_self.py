@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 알아서 로터스 데이터로 해봐~
+=======
+# 데이터 셋을 가져와서 해보자
+>>>>>>> 080954d50305513d288041d53afeec10d7d1e0fc
 
 from tensorflow.keras.datasets import reuters
 import numpy as np
@@ -126,3 +130,9 @@ model.fit(pad_x_train, y_train, epochs=1000, batch_size=32, validation_split=0.2
 #4. 평가, 예측
 loss = model.evaluate(pad_x_test, y_test, batch_size=32)
 print('loss: ', loss)
+<<<<<<< HEAD
+=======
+
+# ======================================
+# loss:  [1.4431557655334473, 0.7564558982849121]
+>>>>>>> 080954d50305513d288041d53afeec10d7d1e0fc

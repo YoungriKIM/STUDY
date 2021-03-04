@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # 46개의 토픽의 라벨을 갖고 있는 11.284개의 뉴스 속 문장 데이터이다.
 
 (x_train, y_train), (x_test, y_test) = reuters.load_data(
-    num_words=1000, test_split=0.2
+    num_words=10000, test_split=0.2
 )
 # reuters > 영국의 로이터 통신사
 # num_word = 처음부터 불러올 단어의 수를 지정할 수 있다!
@@ -88,4 +88,52 @@ print('y 카테고리의 개수: ', category)
 y_bunpo = np.unique(y_train)
 print(y_bunpo)
 # [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+<<<<<<< HEAD
 #  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45]
+=======
+#  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45]
+print('==============================')
+
+# 전처리 해주자
+# 패딩(길이는 아까 그래프보고 확인한 500으로 하자)
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+x_train = pad_sequences(x_train, padding='pre', maxlen=100, truncating='pre')
+x_test = pad_sequences(x_test, padding='pre', maxlen=100, truncating='pre')
+print(x_train.shape, x_test.shape)
+# (8982, 100) (2246, 100)
+
+# y 벡터화
+# from tensorflow.keras.utils import to_categorical
+# y_train = to_categorical(y_train)
+# y_test = to_categorical(y_test)
+# print(y_train.shape, y_test.shape)
+# (8982, 46) (2246, 46)
+
+# 모델 구성
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Embedding, LSTM, Flatten, Conv1D
+
+model = Sequential()
+model.add(Embedding(input_dim=10000, output_dim=64, input_length=100))
+model.add(LSTM(32))
+model.add(Dense(46, activation='softmax'))
+model.summary()
+
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+
+# y 카테고리컬을 끄고! sparse_categorical_crossentropy 을 써보자
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
+# 이제 다중 분류할 때 쓸 수 있는 로스가 하나 더 생겼다!
+
+model.fit(x_train, y_train, epochs=10, batch_size=32, verbose=1)
+
+result = model.evaluate(x_test, y_test)
+print(result)
+
+# ===================================
+# categorical_crossentropy
+# [1.493270993232727, 0.6682991981506348]
+# sparse_categorical_crossentropy
+# [1.57481050491333, 0.6513802409172058]
+
+>>>>>>> 080954d50305513d288041d53afeec10d7d1e0fc
