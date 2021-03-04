@@ -1,5 +1,6 @@
 # IMDB movie review sentiment classification dataset : 2진 분류인 감정분류
 # 실습해라~
+# 임베딩 안 쓴것 까지 해서 비교해라
 
 from tensorflow.keras.datasets import reuters, imdb
 import numpy as np
@@ -73,7 +74,7 @@ loss = model.evaluate(x_test, y_test, batch_size=32)
 print('loss: ', loss)
 
 # ==========================================
+# 85_imdb
+# loss:  [1.3221393823623657, 0.8501999974250793]
 
-
- 
 print('done')
