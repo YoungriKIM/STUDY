@@ -33,6 +33,7 @@ def solution_model():
     # urllib.request.urlretrieve(url, 'sarcasm.json')
 
     # DO NOT CHANGE THIS CODE OR THE TESTS MAY NOT WORK
+    # 주어준 변수
     vocab_size = 1000
     embedding_dim = 16
     max_length = 120
@@ -45,33 +46,22 @@ def solution_model():
     labels = []
     # YOUR CODE HERE
 
-    # load_json
-    import pandas as pd
-    df = pd.read_json ('../Study/tf_certificate/Category4/sarcasm.json', orient ='index ')
+    with open('../Study/tf_certificate/Category4/sarcasm.json') as file:
+        dataset = json.load(file)
 
-    print(df.head())
+    for content in dataset:
+        sentences.append(content['headline'])
+        labels.append(content['is_sarcastic'])
 
     # x, y 지정
-    pre_x = df['headline']
-    y = df['is_sarcastic']
+    pre_x = np.array(sentences)
+    y = np.array(labels)
 
     print(pre_x.shape)
     print(y.shape)
     # (26709,)
     # (26709,)
     # 26709개의 문장이 있다.
-
-    # 미리 주어준 변수
-    vocab_size = 1000
-    embedding_dim = 16
-    max_length = 120
-    trunc_type='post'
-    padding_type='post'
-    oov_tok = "<OOV>"
-    training_size = 20000
-
-    sentences = []
-    labels = []
 
     # 전처리
     # 정수 인코딩

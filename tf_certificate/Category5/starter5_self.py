@@ -201,11 +201,11 @@ ds = ds.window(window_size + 1, shift=1, drop_remainder=True)
 #   남긴거 버림   [3210 ~ 3235]
 print('window 후\n: ', ds)
 # :  <WindowDataset shapes: DatasetSpec(TensorSpec(shape=(1,), dtype=tf.float64, name=None), TensorShape([])), types: DatasetSpec(TensorSpec(shape=(1,), dtype=tf.float64, name=None), TensorShape([]))>
-# 31개씩 1개 띄워서 세트 만들어줌
+# 31개씩 1개 띄워서 배열을 만들어줌
 
 ds = ds.flat_map(lambda w: w.batch(window_size + 1))
 print('flat_map 후\n: ', ds)
-# 위에서 만든 세트를 다시 한 줄로 붙여줌
+# 위에서 만든 배열을 31개씩 한 세트로 붙여줌
 
 ds = ds.shuffle(shuffle_buffer_size)
 print('shuffle 후\n: ', ds)
@@ -213,11 +213,15 @@ print('shuffle 후\n: ', ds)
 
 ds = ds.map(lambda w: (w[:-1], w[1:]))
 # 각 줄에서 끝에 하루 뺀 것 하나 / 첫날 하루 뺀 것 하나 씩
+# 즉 31에서 끝에 뺀 30 / 앞에 뺸 30
 
 return ds.batch(batch_size).prefetch(1)
-# 학습데이터를 나눠서 들고온다
+# 학습데이터를 세트채로 들고온다
 # =======================-------------------------------------
 '''
+
+
+
 
 # PLEASE NOTE IF YOU SEE THIS TEXT WHILE TRAINING -- IT IS SAFE TO IGNORE
 # BaseCollectiveExecutor::StartAbort Out of range: End of sequence
