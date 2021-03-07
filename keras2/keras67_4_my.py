@@ -57,10 +57,10 @@ print("acc : ", acc)
 
 
 # 내 사진 불러와서 사이즈 맞추기
-image = pilimg.open('../Users/Admin/Desktop/비트 숙제/0210/sample_image.jpg')
-pix = image.resize((56,56))
-pix = np.array(pix)
-my_test = pix.reshape(1, 56, 56, 3)/255.
+# image = pilimg.open('../Users/Admin/Desktop/비트 숙제/0210/sample_image.jpg')
+# pix = image.resize((56,56))
+# pix = np.array(pix)
+# my_test = pix.reshape(1, 56, 56, 3)/255.
 # ---------------------------
 # 퀸연아로 맞추기
 image2 = pilimg.open('../Users/Admin/Desktop/비트 숙제/0210/yeona.jpg')
@@ -88,9 +88,9 @@ my_pred_no_answer = [1]     # 남자
 
 
 # 예측하기 _1
-my_pred = model.predict(my_test)
-print('당신은(두구두구)')
-print((1-my_pred[0][0])*100,'%의 확률로 여자입니다.')       #99.99978571840984 %의 확률로 여자입니다.
+# my_pred = model.predict(my_test)
+# print('당신은(두구두구)')
+# print((1-my_pred[0][0])*100,'%의 확률로 여자입니다.')       #99.99978571840984 %의 확률로 여자입니다.
 
 # 예측하기 _2
 my_pred2 = model.predict(yeona_test)

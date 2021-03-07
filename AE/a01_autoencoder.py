@@ -10,16 +10,18 @@
 # ㅣㅣㅣㅣㅣ
 # ㅇㅇㅇㅇㅇ  > 다시 증폭
 # ------------------------------------------------------------------------------------------------
-
 # 오토인코더를 해보자
+
+# 데이터 불러오기
 import numpy as np
 from tensorflow.keras.datasets import mnist
 
 (x_train, _), (x_test, _) = mnist.load_data()
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
+# 전처리(스케일링)
 x_train = x_train.reshape(60000, 784).astype('float32')/255
-x_test = x_test.reshape(10000, 784)/255
+x_test = x_test.reshape(10000, 784)/255.
 # 둘 다 상관 없다.
 
 print(x_train[0])
@@ -32,9 +34,9 @@ from tensorflow.keras.layers import Dense, Input
 input_img = Input(shape=(784,))
 encoded = Dense(64, activation='relu')(input_img)
 decoded = Dense(784, activation='sigmoid')(encoded)    # 아웃풋 레이어에는 sigmoid를 써야한다.(이미지/255. 하면서 0~1 사이만 있어서)
-# decoded = Dense(784, activation='relu')(encoded)     # relu를 쓰면 0과1사이로 수렴을 안 하고 마이너스였던 부분은 손실되고 나머지는 무한으로 가니까
+# decoded = Dense(784, activation='relu')(encoded)     # relu를 쓰면 0과1사이로 수렴을 안 하고 마이너스였던 부분은 손실되고 나머지는 무한으로 가니까 노!
 
-# 오토 인코더로 지정
+# 구성한 모델을 오토 인코더로 지정
 autoencoder = Model(input_img, decoded)
 
 autoencoder.summary()
@@ -43,10 +45,10 @@ autoencoder.summary()
 # autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
 # autoencoder.compile(optimizer='adam', loss='mse')
-# mnist의 이미지는 어차피 0과 1사이라서 mse / binary 모두 상관없다.
+# > mnist의 이미지는 어차피 0과 1사이라서 mse / binary 모두 상관없다.
 
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
-# loss: 0.0732 - acc: 0.0137 - val_loss: 0.0740 - val_acc: 0.0119
+# > loss: 0.0732 - acc: 0.0137 - val_loss: 0.0740 - val_acc: 0.0119
 # acc가 낮을 수 밖에 없다.
 # -------------------------------------------------------------------------------------------------------
 

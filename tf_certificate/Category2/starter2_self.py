@@ -77,7 +77,7 @@ def solution_model():
     from tensorflow.keras.callbacks import EarlyStopping
     stop = EarlyStopping(monitor='val_loss', patience=16, mode='auto')
 
-    model.fit(x_train, y_train, epochs=300, batch_size=32, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])
+    model.fit(x_train, y_train, epochs=30, batch_size=8, validation_data=(x_val, y_val), verbose=1, callbacks=[stop])
 
     # 평가
     loss = model.evaluate(x_test, y_test, batch_size=32)
@@ -92,3 +92,7 @@ def solution_model():
 if __name__ == '__main__':
     model = solution_model()
     model.save("mymodel.h5")
+
+
+# =====================================================
+# loss, acc:  [0.43111270666122437, 0.8730999827384949]

@@ -75,40 +75,40 @@ def solution_model():
     # Found 504 images belonging to 3 classes.
     # (16, 150, 150, 3) (16, 150, 150, 3)
 
+    import numpy as np
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Flatten, Dropout, Dense
 
     model = tf.keras.models.Sequential([
     # YOUR CODE HERE, BUT END WITH A 3 Neuron Dense, activated by softmax
-        tf.keras.layers.Conv2D(filters=256, kernel_size=3, padding='same', activation='relu', input_shape=(150,150,3)),
-        tf.keras.layers.MaxPool2D(3,3),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu'),
-        tf.keras.layers.MaxPool2D(3,3),
-        tf.keras.layers.Conv2D(filters=64, kernel_size=3, activation='relu'),
-        tf.keras.layers.Conv2D(filters=64, kernel_size=3, activation='relu'),
-        tf.keras.layers.MaxPool2D(3,3),
+        tf.keras.layers.Conv2D(256, (3,3), activation = 'relu', padding = 'valid', input_shape = (150, 150, 3)),
+        tf.keras.layers.MaxPooling2D(3,3),
+        tf.keras.layers.Dropout(0.3),
+        tf.keras.layers.Conv2D(256, (3,3), activation = 'relu', padding = 'valid'),
+        tf.keras.layers.MaxPooling2D(3,3),
+        tf.keras.layers.Conv2D(128, (5,5), activation = 'relu', padding = 'valid'),
+        tf.keras.layers.MaxPooling2D(5,5),
+        tf.keras.layers.Dropout(0.3),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dense(32, activation='relu'),
+        tf.keras.layers.Dense(64, activation = 'relu'),
+        tf.keras.layers.Dense(32, activation = 'relu'),
+        tf.keras.layers.Dense(16, activation = 'relu'),
         tf.keras.layers.Dense(3, activation='softmax')
     ])
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-
     from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-    stop = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-    lr = ReduceLROnPlateau(monitor='val_loss', factor=0.3, patience=10, mode='min')
+    es = EarlyStopping(patience = 6)
+    lr = ReduceLROnPlateau(factor = 0.25, verbose = 1, patience = 3)
 
-    model.fit_generator(train_generator, steps_per_epoch=len(train_generator)/batch, epochs=500\
-                    , validation_data=test_generator, validation_steps=4, callbacks =[stop, lr], verbose=1)
+    model.compile(loss= 'categorical_crossentropy', optimizer = 'adam', metrics = ['acc'])
+    model.fit_generator(train_generator, epochs = 1000, validation_data= test_generator,\
+         steps_per_epoch= np.ceil(2016/32), validation_steps= np.ceil(504/32), callbacks = [es, lr])
 
     loss, acc = model.evaluate(test_generator)
     print("loss : ", loss)
     print("acc : ", acc)
 
     return model
-
 
 
 # Note that you'll need to save your model as a .h5 like this.
@@ -120,9 +120,5 @@ if __name__ == '__main__':
     # model.save("mymodel.h5")
 
 # ============================
-# loss :  0.5241137742996216
-# acc :  0.75
-
-# loss :  0.3494054079055786
-# acc :  0.829365074634552
-
+# loss :  0.11730863153934479
+# acc :  0.954365074634552
