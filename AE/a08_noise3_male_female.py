@@ -40,7 +40,7 @@ def autoencoder():
 model = autoencoder()
 model.summary()
 model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['acc'])
-model.fit(x_train_noised, x_train, epochs = 100, batch_size=64)
+model.fit(x_train_noised, x_train, epochs = 20, batch_size=64)
 
 # ---------------------------------------------------------------------------------
 output = model.predict(x_test_noised)
