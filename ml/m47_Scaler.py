@@ -1,5 +1,7 @@
 # m46_5 가져와서 씀
-
+# 다른 스케일러들을 써보자! 
+# MaxAbsScaler, PowerTransformer
+# https://mkjjo.github.io/python/2019/01/10/scaler.html
 
 import numpy as np
 
@@ -20,13 +22,15 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Qu
 from sklearn.preprocessing import MaxAbsScaler, PowerTransformer
 
 # MaxAbsScaler -----------------------------------------------------------
+# 절대값이 0~1사이에 매핑되도록 한다. 즉 -1~1 사이로 재조정한다. 양수 데이터로만 구성된 특징 데이터셋에서는 MinMaxScaler와 유사하게 동작하며, 큰 이상치에 민감할 수 있다.
 # scaler = MaxAbsScaler()
 
 # PowerTransformer  -----------------------------------------------------------
-# scaler = PowerTransformer(method='yeo-johnson')
 
+# scaler = PowerTransformer(method='yeo-johnson')
 scaler = PowerTransformer(method='box-cox')
 # ValueError: The Box-Cox transformation can only be applied to strictly positive data
+# box-cox 는 양수만 지원한다.
 #################################################################################
 
 scaler.fit(x)

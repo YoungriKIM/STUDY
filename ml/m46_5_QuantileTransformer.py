@@ -36,7 +36,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffl
 
 #모델 짜기
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.layers import Input, Dense, Conv2DTranspose
 
 inputs = Input(shape=(13,)) #input_dim=13 이랑 input_shape=(13,) 과도 같다.
 dense1 = Dense(56, activation='relu')(inputs)
