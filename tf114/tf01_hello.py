@@ -19,7 +19,7 @@ print(tf.__version__)
 hello = tf.constant('Hello World')
 print(hello)
 # Tensor("Const:0", shape=(), dtype=string)
-# 자료형의 구조만 나온다. 모든 것은 세션을 통과해야 출력된다.
+# 자료형의 구조만 나온다. 모든 것은 세션을 통과해야 출력된다. 왜 귀찮게 세션 통과하는지는 tf3 참고
 
 sess = tf.Session()
 print(sess.run(hello))

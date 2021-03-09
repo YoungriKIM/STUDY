@@ -22,7 +22,11 @@ print('divide 나눗셈: ', sess.run(node6))
 node7 = tf.math.mod(node1, node2)
 print('math.mod 나머지: ', sess.run(node7))
 
-
+# add 덧셈:  5.0
+# sub 뺄셈:  -1.0
+# mul 곱셈:  6.0
+# divide 나눗셈:  0.6666667
+# math.mod 나머지:  2.0
 
 # --------------------------------
 # TensorFlow 연산   축약 연산자   설명
