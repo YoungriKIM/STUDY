@@ -6,7 +6,7 @@
 import tensorflow as tf
 
 print(tf.executing_eagerly())
-# False # 지금 가상환경은 텐서플로1로 실행하고 있어서 펄스가 뜬다.
+# False # 지금 가상환경은 텐서플로1로 실행하고 있어서 True가 뜬다.
 
 # 즉시 실행 모드를 diable 로 만들면 텐서플로1점대로 실행을 할 수 있다.
 tf.compat.v1.disable_eager_execution()

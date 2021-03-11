@@ -45,7 +45,6 @@ train = tf.train.AdamOptimizer(learning_rate = 1e-5).minimize(loss)
 
 # 0~1 사이로 나올 프레딕트를 만들자
 predicted = tf.cast(hypothesis > 0.5, dtype=tf.float32)
-accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, y), dtype=tf.float32))
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
