@@ -1,12 +1,16 @@
-# 엑티베이션 시그모이드도 하고 애큐러시지표도 만들자
+# 텐서플로1에서 인공지능의 겨울 xor 문제를 알아보자
 
 import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
 tf.set_random_seed(66)
 
-x_data = [[1,2], [2,3], [3,1],
-          [4,3], [5,3], [6,2]]
-y_data = [[0], [0], [0],
-          [1], [1], [1]]    # 이진분류인 데이터
+x_data = np.array([[0,0], [0,1], [1,0], [1,1]], dtype=np.float32)
+y_data = np.array([[0], [1], [1], [0]], dtype=np.float32)
+
+plt.plot(x_data, y_data)
+plt.show()
+# 실습 만들어라!
 
 x = tf.placeholder(tf.float32, shape=[None,2])
 y = tf.placeholder(tf.float32, shape=[None,1])
@@ -46,20 +50,14 @@ with tf.Session() as sess:
     print('예측값:\n', h, '\n원래값:\n', c, '\n정확도: ', a)
 
 # ====================================
-# 4800 0.24966846
 # 예측값:
-#  [[0.07802196]
-#  [0.195242  ]
-#  [0.48302576]
-#  [0.7082548 ]
-#  [0.884784  ]
-#  [0.9640333 ]]
+#  [[0.5098468 ]
+#  [0.50287294]
+#  [0.5002181 ]
+#  [0.4932434 ]]
 # 원래값:
-#  [[0.]
-#  [0.]
-#  [0.]
+#  [[1.]
 #  [1.]
 #  [1.]
-#  [1.]]
-# 정확도:  1.0
-
+#  [0.]]
+# 정확도:  0.75
