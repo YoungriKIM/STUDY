@@ -1,5 +1,6 @@
 # 배치를 정해주자!
 # 튜닝해서 애큐러시 0.9이상으로
+# 이 파일의 튜닝 후는 _self.py
 
 import tensorflow as tf 
 
@@ -59,31 +60,31 @@ print('layer1: ', layer1)
 # layer1:  Tensor("dropout/mul_1:0", shape=(?, 100), dtype=float32)
 
 # ------------------------------------------------------------------------------------------------------------
-w2 = tf.get_variable('weight2', shape=[100, 128], initializer=tf.contrib.layers.xavier_initializer())
+w2 = tf.get_variable('weight2', shape=[100, 128], initializer=tf.initializers.he_normal())
 b2 = tf.Variable(tf.random_normal([1, 128], stddev=0.1), name='bias2')
-layer2 = tf.nn.elu(tf.matmul(layer1, w2) + b2)
+layer2 = tf.nn.relu(tf.matmul(layer1, w2) + b2)
 layer2 = tf.nn.dropout(layer2, keep_prob=0.3)
 
 # ------------------------------------------------------------------------------------------------------------
-w3 = tf.get_variable('weight3', shape=[128, 64], initializer=tf.contrib.layers.xavier_initializer())
+w3 = tf.get_variable('weight3', shape=[128, 64], initializer=tf.initializers.he_normal())
 b3 = tf.Variable(tf.random_normal([1, 64], stddev=0.1), name='bias3')
-layer3 = tf.nn.selu(tf.matmul(layer2, w3) + b3)
+layer3 = tf.nn.relu(tf.matmul(layer2, w3) + b3)
 layer3 = tf.nn.dropout(layer3, keep_prob=0.3)
 
 # ------------------------------------------------------------------------------------------------------------
-w4 = tf.get_variable('weight4', shape=[64, 10], initializer=tf.contrib.layers.xavier_initializer())
+w4 = tf.get_variable('weight4', shape=[64, 10], initializer=tf.initializers.he_normal())
 b4 = tf.Variable(tf.random_normal([1, 10], stddev=0.1), name='bias4')
 hypothesis = tf.nn.softmax(tf.matmul(layer3, w4) + b4)
 
 # ------------------------------------------------------------------------------------------------------------
 # 컴파일 훈련(다중분류)
 loss = tf.reduce_mean(-tf.reduce_sum(y * tf.log(hypothesis), axis = 1))
-train = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
+train = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(loss)
 
 # ------------------------------------------------------------------------------------------------------------
 # 배치사이즈를 안 정하면 6만개씩 한 번에 들어간다. 배치사이즈를 정해주자
 
-training_epochs = 15                        # 에폭 지정
+training_epochs = 50                        # 에폭 지정
 batch_size = 100
 total_batch = int(len(x_train)/batch_size)  # 60000/100 = 600 > 1에폭당 600번*100개씩 > 1에폭당 6만개는 동일한데 배치사이즈에 따라서 1에폭당 몇개씩 몇번 돌릴지가 달라진다.
 
@@ -98,7 +99,7 @@ for epoch in range(training_epochs):
         end = start + batch_size
 
         batch_x, batch_y = x_train[start:end], y_train[start:end]
-        feed_dict = {x:x_train, y:y_train}
+        feed_dict = {x:batch_x, y:batch_y}
         c, _ = sess.run([loss, train], feed_dict=feed_dict)
         avg_cost += c/total_batch   # += : 오른쪽의 값을 매번 갱신해서 더해줌(600번 더해질 것임) / avg_cost: average cost 모두 더한 c를 600으로나누니 평균값이 나온다.
 
@@ -111,3 +112,5 @@ print('===== done =====')
 prediction = tf.equal(tf.arg_max(hypothesis, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
 print('Acc: ', sess.run(accuracy, feed_dict={x:x_test, y:y_test}))
+
+# =====================================================
