@@ -13,6 +13,7 @@ tf.compat.v1.disable_eager_execution()
 print(tf.executing_eagerly())
 # False
 
+print(tf.__version__)
 
 # ----------------------------------------------------
 # hello world를 출력해보자

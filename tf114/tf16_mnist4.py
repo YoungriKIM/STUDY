@@ -1,3 +1,4 @@
+# mnist를 DNN 으로!
 # 배치를 정해주자!
 # 튜닝해서 애큐러시 0.9이상으로
 # 이 파일의 튜닝 후는 _self.py
@@ -35,7 +36,7 @@ y = tf.placeholder('float', [None, 10])
 # ------------------------------------------------------------------------------------------------------------
 # Variable, get_variable 은 비슷하지만 initializer를 추가할 수 있다.
 # w1 = tf.Variable(tf.random_normal([784, 100], stddev=0.1), name='weight1')
-w1 = tf.get_variable('weight1', shape=[784, 100], initializer=tf.contrib.layers.xavier_initializer())
+w1 = tf.get_variable('weight1', shape=[784, 100], initializer=tf.initializers.he_normal())
 # 레이어를 출력해보자
 print('w1: ', w1)
 # w1:  <tf.Variable 'weight1:0' shape=(784, 100) dtype=float32_ref>
@@ -79,7 +80,7 @@ hypothesis = tf.nn.softmax(tf.matmul(layer3, w4) + b4)
 # ------------------------------------------------------------------------------------------------------------
 # 컴파일 훈련(다중분류)
 loss = tf.reduce_mean(-tf.reduce_sum(y * tf.log(hypothesis), axis = 1))
-train = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(loss)
+train = tf.train.AdamOptimizer(learning_rate=1e-7).minimize(loss)
 
 # ------------------------------------------------------------------------------------------------------------
 # 배치사이즈를 안 정하면 6만개씩 한 번에 들어간다. 배치사이즈를 정해주자
@@ -114,3 +115,4 @@ accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
 print('Acc: ', sess.run(accuracy, feed_dict={x:x_test, y:y_test}))
 
 # =====================================================
+# 위의 _self 파일 참고

@@ -41,6 +41,7 @@ stop = EarlyStopping(monitor='val_loss', patience=10, mode='min')
 import tensorflow as tf
 strategy = tf.distribute.MirroredStrategy(cross_device_ops=\
     tf.distribute.HierarchicalCopyAllReduce())  # Hierarchical: 계층형
+# 이럴 경우에는 글카의 종류가 다르면 성능이 안 좋을 수 있으니 같은 종류여야 효율적~
 # ----------------------------------------------------------------------------------
 
 with strategy.scope():

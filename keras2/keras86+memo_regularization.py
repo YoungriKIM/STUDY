@@ -45,8 +45,20 @@ layer = layers.Dense(
 )
 
 # 종류
+# kernel_regularizer
 # tf.keras.regularizers모듈의 일부로 다음과 같은 기본 제공 정규화를 사용할 수 있다.
 from tensorflow.keras.regularizers import l1, l2, l1_l2
+
+tf.compat.v1.initializers.he_normal()
+relu, selu, elu ....와 잘 맞는다.
+
+tf.contrib.layers.xavier_initializer()
+sigmoid, tahn 과 잘 맞는다.
+
+# bias_regularizer
+# bias 는 활성화 함수에 직접적으로 관여하게 되므로 몹시 중요한데,
+# 기존에는 0.01 이나 0.1 처럼 매우 작은 양수를 주었으나,
+# 학습 방법이 개선 된 지금은 보통 0 으로 초기화를 시킴
 
 # https://keras.io/api/layers/regularizers/
 
@@ -64,3 +76,6 @@ from tensorflow.keras.layers import BatchNormalization, Dropout
 # 설정하여 과적 합을 방지합니다. 0으로 설정되지 않은 입력은 모든 입력에 대한 합계가 변경되지
 # 않도록 1 / (1-속도)만큼 확장됩니다.
 # https://keras.io/api/layers/regularization_layers/dropout/
+
+# Batch, Dropout 과 같이 쓰면 안 좋다고는 하지만 무조건 확정적인 것은 아니며,
+# 실제로도 gan 에서도 함께 쓰이기도 한다
