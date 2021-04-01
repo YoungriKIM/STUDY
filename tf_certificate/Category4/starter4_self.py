@@ -29,8 +29,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 def solution_model():
-    # url = 'https://storage.googleapis.com/download.tensorflow.org/data/sarcasm.json'
-    # urllib.request.urlretrieve(url, 'sarcasm.json')
+    url = 'https://storage.googleapis.com/download.tensorflow.org/data/sarcasm.json'
+    urllib.request.urlretrieve(url, 'sarcasm.json')
 
     # DO NOT CHANGE THIS CODE OR THE TESTS MAY NOT WORK
     # 주어준 변수
@@ -46,7 +46,7 @@ def solution_model():
     labels = []
     # YOUR CODE HERE
 
-    with open('../Study/tf_certificate/Category4/sarcasm.json') as file:
+    with open('sarcasm.json') as file:
         dataset = json.load(file)
 
     for content in dataset:
@@ -96,7 +96,7 @@ def solution_model():
     model = tf.keras.Sequential([
     # YOUR CODE HERE. KEEP THIS OUTPUT LAYER INTACT OR TESTS MAY FAIL
         Embedding(vocab_size, embedding_dim, input_length=max_length),
-        Bidirectional(LSTM(128)),
+        Bidirectional(LSTM(32)),
         tf.keras.layers.Dense(1, activation='sigmoid')
     ])
 

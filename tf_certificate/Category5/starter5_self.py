@@ -46,13 +46,13 @@ def windowed_dataset(series, window_size, batch_size, shuffle_buffer):
 
 
 def solution_model():
-    # url = 'https://storage.googleapis.com/download.tensorflow.org/data/Sunspots.csv'
-    # urllib.request.urlretrieve(url, '../Study/tf_certificate/Category5/sunspots.csv')
+    url = 'https://storage.googleapis.com/download.tensorflow.org/data/Sunspots.csv'
+    urllib.request.urlretrieve(url, 'sunspots.csv')
 
     time_step = []
     sunspots = []
 
-    with open('../Study/tf_certificate/Category5/sunspots.csv') as csvfile:
+    with open('sunspots.csv') as csvfile:
       reader = csv.reader(csvfile, delimiter=',')
       next(reader)
       for row in reader:

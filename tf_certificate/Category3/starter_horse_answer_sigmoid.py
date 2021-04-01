@@ -27,18 +27,18 @@ import zipfile
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 def solution_model():
-    # _TRAIN_URL = "https://storage.googleapis.com/download.tensorflow.org/data/horse-or-human.zip"
-    # _TEST_URL = "https://storage.googleapis.com/download.tensorflow.org/data/validation-horse-or-human.zip"
-    # urllib.request.urlretrieve(_TRAIN_URL, 'horse-or-human.zip')
-    # local_zip = 'horse-or-human.zip'
-    # zip_ref = zipfile.ZipFile(local_zip, 'r')
-    # zip_ref.extractall('tmp/horse-or-human/')
-    # zip_ref.close()
-    # urllib.request.urlretrieve(_TEST_URL, 'testdata.zip')
-    # local_zip = 'testdata.zip'
-    # zip_ref = zipfile.ZipFile(local_zip, 'r')
-    # zip_ref.extractall('tmp/testdata/')
-    # zip_ref.close()
+    _TRAIN_URL = "https://storage.googleapis.com/download.tensorflow.org/data/horse-or-human.zip"
+    _TEST_URL = "https://storage.googleapis.com/download.tensorflow.org/data/validation-horse-or-human.zip"
+    urllib.request.urlretrieve(_TRAIN_URL, 'horse-or-human.zip')
+    local_zip = 'horse-or-human.zip'
+    zip_ref = zipfile.ZipFile(local_zip, 'r')
+    zip_ref.extractall('tmp/horse-or-human/')
+    zip_ref.close()
+    urllib.request.urlretrieve(_TEST_URL, 'testdata.zip')
+    local_zip = 'testdata.zip'
+    zip_ref = zipfile.ZipFile(local_zip, 'r')
+    zip_ref.extractall('tmp/testdata/')
+    zip_ref.close()
 
     train_datagen = ImageDataGenerator(
     rescale=1./255,
@@ -51,7 +51,7 @@ def solution_model():
     validation_datagen = ImageDataGenerator(rescale=1./255)
 
     batch = 10
-    train_dir = '../Study/tf_certificate/Category3/tmp_horse/horse-or-human'
+    train_dir = 'tmp/horse-or-human'
     train_generator = train_datagen.flow_from_directory(
         train_dir
         , target_size=(300, 300)
@@ -59,7 +59,7 @@ def solution_model():
         , class_mode='binary'
     )
 
-    test_dir = '../Study/tf_certificate/Category3/tmp_horse/testdata'
+    test_dir = 'tmp/testdata'
     validation_generator = validation_datagen.flow_from_directory(
         test_dir
         , target_size=(300, 300)
@@ -115,7 +115,7 @@ def solution_model():
 # and the score will be returned to you.
 if __name__ == '__main__':
     model = solution_model()
-    # model.save("mymodel.h5")
+    model.save("mymodel.h5")
 
 # ================================
 # loss:  1.9158985614776611
