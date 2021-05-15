@@ -36,14 +36,14 @@ import tensorflow as tf
 from keras_preprocessing.image import ImageDataGenerator
 
 def solution_model():
-    # url = 'https://storage.googleapis.com/download.tensorflow.org/data/rps.zip'
-    # urllib.request.urlretrieve(url, 'rps.zip')
-    # local_zip = 'rps.zip'
-    # zip_ref = zipfile.ZipFile(local_zip, 'r')
-    # zip_ref.extractall('tmp/')
-    # zip_ref.close()
+    url = 'https://storage.googleapis.com/download.tensorflow.org/data/rps.zip'
+    urllib.request.urlretrieve(url, 'rps.zip')
+    local_zip = 'rps.zip'
+    zip_ref = zipfile.ZipFile(local_zip, 'r')
+    zip_ref.extractall('tmp/')
+    zip_ref.close()
 
-    TRAINING_DIR = '../Study/tf_certificate/Category3/tmp/rps'
+    TRAINING_DIR = 'tmp/rps'
     training_datagen = ImageDataGenerator(
         # YOUR CODE HERE)
     rescale=1./255,
@@ -117,8 +117,8 @@ def solution_model():
 # and the score will be returned to you.
 if __name__ == '__main__':
     model = solution_model()
-    # model.save("mymodel.h5")
+    model.save("mymodel.h5")
 
 # ============================
-# loss :  0.11730863153934479
-# acc :  0.954365074634552
+# loss :  0.02657821588218212
+# acc :  1.0

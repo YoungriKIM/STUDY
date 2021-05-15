@@ -1,0 +1,11 @@
+1) cmd 켜고
+C:\Users\Admin>pip install autokeras
+ >> 
+pip list 확인
+autokeras                          1.0.12
+
+확인!
+
+# --------------------------------------
+https://autokeras.com/
+공식 홈페이지에서 더 많은 정보 확인 가능 !
