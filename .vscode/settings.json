@@ -1,4 +1,5 @@
 {
     "python.pythonPath": "C:\\Users\\lemon\\anaconda3\\python.exe",
-    "python.autoComplete.addBrackets": true
+    "python.autoComplete.addBrackets": true,
+    "python.analysis.completeFunctionParens": true
 }
