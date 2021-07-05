@@ -1,5 +1,6 @@
 # 공식 홈페이지 튜토리얼 해보기 
 # http://hyperopt.github.io/hyperopt/#getting-started
+# 공식 홈페이지 안내
 
 # Getting started
 # 다운 완류
