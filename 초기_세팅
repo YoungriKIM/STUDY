@@ -4,12 +4,26 @@ path(체크하면 윈도우 cmd창에서 conda명령어 사용할 수 있다.
 다른 파이썬은 설치하지 않고 아나콘다를 주력으로 사용할 경우에만 체크할 것을 권유한다)
 (파이썬 3.8.5)
 + 아나콘다에서 파이썬 설치할 때 경로 기억해놓을 것
+(C:\Users\[개인유저명]\anaconda3)
 
 2. 그래픽드라이버 (사양에 맞는 것 설치)
+현재사용) geforce rtx 3080ti (12GB)
+다운 파일: 472.12-desktop-win10-win11-64bit-international-dch-whql.exe
+경로: https://www.nvidia.co.kr/Download/index.aspx?lang=kr#
 
 3. cuda 11.0 exe(local) 
 -사용자 정의
 -cuda -visual studio, sample, document 해제
+(C:\Users\[개인유저명]\AppData\Local\Temp\CUDA)
+경로: https://developer.nvidia.com/cuda-toolkit-archive
+
+1) cuda_11.0.2_451.48_win10.exe x
+2) cuda_11.0.3_451.82_win10.exe x
+3) cuda_11.1.0_456.43_win10.exe x
+4) cuda_11.1.1_456.81_win10.exe x
+5) cuda_11.4.2_471.41_win10.exe
+6) cuda_10.2.89_441.22_win10.exe
+
 
 4. cudnn 8.0.5.39 for cuda 11.0 설치해서 압축풀고 파일들  cuda 11.0 파일에 덮어쓰기
 
