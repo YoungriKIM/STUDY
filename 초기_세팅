@@ -1,0 +1,26 @@
+1. 아나콘다 설치
+just me -> advanced options: 박스 2개 다 체크
+path(체크하면 윈도우 cmd창에서 conda명령어 사용할 수 있다. 다른 파이썬은 설치하지 않고 아나콘다를 주력으로 사용할 경우에만 체크할 것을 권유한다)
+(파이썬 3.8.5)
+
+2. 그래픽드라이버 (사양에 맞는 것 설치)
+
+3. cuda 11.0 exe(local) 
+-사용자 정의
+-cuda -visual studio, sample, document 해제
+
+4. cudnn 8.0.5.39 for cuda 11.0 설치해서 압축풀고 파일들  cuda 11.0 파일에 덮어쓰기
+
+5. pip install tensorflow-gpu==2.4.1
+
+6. pip install keras==2.4.3
+
+7. vscode설치(path 추가)
+익스텐션 (테트리스 모양)- python검색, python, python for vscode,
+python extension pack, python preview 설치 
+korea 한국어 설치
+
+8. git 설치(깃허브 연동)
+
+9.cpu 오버클럭
+https://blog.naver.com/jesang1/222083753343
