@@ -1,0 +1,158 @@
+가상환경 만들기
+
+cmd - conda create -n (환경 이름) python=3.8.5
+
+activate (환경이름)
+
+가상환경 이름 변경(이름 변경 기능 x, 복사와 삭제를 통해 변경의 목적 달성)
+conda create --name [변경할이름] --clone [기존환경이름]
+conda activate [변경할이름]
+conda remove --name [기존환경이름] --all
+
+가상환경 목록 확인 : conda env list
+
+<설치 목록>
+!!3090 gpu!!
+tensorflow의 경우 설치 가능한 것이 2.3.0이 끝이기 때문에 최신 버전 gpu를 설치해준다.
+https://velog.io/@skyfishbae/RTX3090-2%EB%8C%80-Ubuntu-18.04-%EB%94%A5%EB%9F%AC%EB%8B%9D-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95-2-Anaconda-Tensorflow-keras-%EC%84%A4%EC%B9%98
+
+pip install tf-nightly
+pip install tensorflow-gpu==2.4.1
+
+pip install keras==2.4.3
+
+pip install pandas
+
+pip install sklearn
+
+* pyaudio 설치방법
+pip install pipwin
+pipwin install pyaudio
+
+pip install matplotlib
+
+pip install seaborn
+
+pip install opencv-python
+
+* NeuralProphet 설치 방법
+git clone https://github.com/ourownstory/neural_prophet
+cd neural_prophet
+pip install .[live]
+
+* youtube영상 데이터 
+pip install pytube (유튜브 동영상 다운)
+pip install moviepy (동영상을 오디오파일로 변환)
+pip install pydub (wav파일 자르는 기능)
+pip install SpeechRecognition ( stt 구글 API)
+
+____________________________________________________________________________________
+파이토치 설치
+
+conda create -n (환경 이름) python=3.8.5
+
+conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
+pip install numpy
+
+
+_____________________________________________________________________________________
+tensorflow 1점대
+가상환경설치가자!!
+
+---
+cmd켜
+conda create -n tf114 python=3.6.5
+# 텐서플로우 1.1.4 버전 할 거다. 파이썬 버전은 3.6.5로
+# tf114라는 가상환경이 생성이 될것이다.
+
+y 눌러
+# 파이썬부터 다시 시작이 될 거다.
+
+activate base
+로 입력을 하면
+(base) C:\Users\Admin
+가 뜨는데 가상환경이랑 상관없이 워언래 내가 작업하고 있던 경로를 알려준다.
+
+activate tf114
+를 입력하면
+(tf114) C:\Users\Admin>
+가 뜨는데 가상환경으로 경로가 나온다. 
+
+deactivate
+를 입력하면 원래 있던
+(base) C:\Users\Admin>
+으로 나간다.
+
+# 깔려있는 환경을 확인해보자
+C:\Users\Admin>conda env list
+# conda environments:
+#
+base                  *  C:\Users\Admin\anaconda3
+tf114                    C:\Users\Admin\anaconda3\envs\tf114
+# 두개의 가상 환경이 확인된다.
+
+# 가상환경으로 이동하자
+activate tf114
+# 파이썬 입력해서 버전 확인하자
+(tf114) C:\Users\Admin>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+
+# 어떤 버전의 파이썬을 설치할 수 있는지 확인해보자
+conda search python
+# >> 리스트가 쭉 나올 것 이다 
+
+# 설치되어 있는 것 확인해볼까
+(tf114) C:\Users\Admin>pip list
+Package      Version
+------------ -------------------
+certifi      2020.12.5
+pip          21.0.1
+setuptools   52.0.0.post20210125
+wheel        0.36.2
+wincertstore 0.2
+# 설치된 것이 너무 없는데 차차 설치하자
+
+# 삭제하고 싶을때는?
+conda remove --name tf114 --all
+# tf114 가상환경에 들어있는 모든 것이 삭제된다.
+
+# ==================================
+# 이제 가상 환경에 텐서플로를 설치해보자
+(tf114) C:\Users\Admin>pip install tensorflow==1.14
+
+## 회사에서 일하면 원격으로 접속해서 클라우드로 작업하기 때문에 베이스를 건드리는 일은 별로 없다. 버전이 다른 프로그램을 깔거나 파이토치용을 위해서 가상환경을 만드는 것이 효율적이다.
+
+# 에러발생
+ERROR: Could n버전ot install packages due to an OSError: [Errno 2] No such file or directory: 'C:\\Users\\Admin\\AppData\\Local\\Temp\\pip-unpack-bnghfqog\\protobuf-3.15.5-cp36-cp36m-win_amd64.whl'
+
+# 오른쪽아래 여우모양 아이콘 윈도우 보호 프로그램인 action recomended 의 malware를 enable 로 바꾼다.
+
+# 다시 가상 환경에 텐서플로를 설치 시도
+(tf114) C:\Users\Admin>pip install tensorflow==1.14
+# 하고 import tensorflow 하면 in a future version of numpy으로 뜬다.
+# 넘파이 버전의 문제다
+
+(tf114) C:\Users\Admin>pip list
+입력 하면 
+numpy                1.19.5
+로 버전이 확인 된다.
+
+# 원래 베이스환경에서 쓰던 넘파이는 1.18.5 이다.
+
+(tf114) C:\Users\Admin>pip uninstall numpy
+입력해서 넘파이 1.19.5 삭제
+
+(tf114) C:\Users\Admin>pip install numpy==1.16
+입력해서 다시 설치
+
+(tf114) C:\Users\Admin>python
+하고
+import tensorflow as tf
+하면 >>> 모양으로 바로 넘어감을 확인
+
+# ==================================
+# 비주얼코드 창 다 닫아!
+# 그리고 다시 켜라!
+
+tf114 폴더 만들고 이제부터 vs코드로 이동
