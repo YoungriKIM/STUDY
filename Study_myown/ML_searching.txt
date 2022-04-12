@@ -1,0 +1,74 @@
+# 성능, 시간 상위 모델 3가지
+
+1) PassiveAggressiveClassifier
+2) LinearSVC
+3) CalibratedClassifierCV
+
+==================================================================================================
+1) PassiveAggressiveClassifier
+https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveClassifier.html
+ML 중 Online Learning에 해당하는 모델
+
+온라인 학습 알고리즘(Online Learning) : 점진적 학습 알고리즘(incremental learning)이 정확한 명칭
+    학습이 끝나 제품화가 된 모델에 새로 들어온 데이터를 미니배치 형태로 학습시키는 방법.
+    미니 배치 크기가 작아 학습이 빠르고 비용이 적게 든다.
+    한 번 학습한 데이터는 폐기 한다. 저장 공간을 아낄 수 있다.
+    다음 배포 때 이전데이터+새로운데이터를 모두 모아 다시 학습할 필요가 없다.
+    점진적으로 학습이 일어나 점진적 학습이라 부르는 것이 정확하다
+    빠른 변화에 적응하거나 자원이 한정적인 경우 적합.
+    learning rate가 가장 중요한 하이퍼파라미터로 작동하는데,
+        학습률이 높은 경우 - 시스템이 데이터에 빠르게 적응하나 과거의 데이터를 금방 잊는다.
+        학습률이 낮은 경우 - 시스템의 관성이 커져 적응이 느리나 노이즈에 덜 민감해진다.
+
+sklearn.linear_model.PassiveAggressiveClassifier(
+C=1.0                           # learning rate (D:1.0)
+, fit_intercept=True            # 절편(intercept)를 추정할지 여부. False라면 데이터가 이미 중앙에 위치한다고 가정 (D:True)
+, max_iter=1000                 # 학습 epoch (D:1000)
+, tol=0.001                     # stopping 기준 (loss > previous_loss - tol)일 때 중지 (D:1e-3)
+, early_stopping=False          # val에서 적용 (D:False)
+, validation_fraction=0.1       # train에서 분할 할 val 비율 (ES True일 때만 유효)
+, n_iter_no_change=5            # ES patience (D: 5)
+, shuffle=True                  # each epoch 데이터 섞을지 여부 (D:True)
+, verbose=0                     # 학습 출력 여부 (D: 0)
+, loss='hinge'                  # 손실계산방식 loss(y) = max(0, S_j-S_yi + 1), squared_hinge 는 hinge에 제곱해 non-linear하게 쓰는 것 (D: hinge)
+, n_jobs=None                   # CPU worker (D: None)
+, random_state=None             # 난수값 (D: None)
+, warm_start=False              # grid_search같은 연속학습이나 partial_fit을 사용 할 때 이전 학습에 사용한 옵션값을 다음 학습 시작시 사용할 수 있게 함 (D: false)
+, class_weight=None             # 라벨의 클래스별 가중치 설정. balanced일 경우 알아서 계산해 적용 (D: None)
+, average=False                 # SGD 계산시 몇개의 샘플을 모아서 평균낼지. 1보다 커야 함 (D: False)
+)
+
+==================================================================================================
+2) LinearSVC
+https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html
+오차가 아닌 서포트 벡터를 이용해 큰 margin을 찾는 방법
+    스케일에 민감
+    각 클래스에 대한 확률을 제공하지 않음 
+    매번 위치를 바꿔가며 계산하는 과정이 복잡해 n_jobs를 사용하지 않음
+
+sklearn.svm.LinearSVC(
+penalty='l2'                # 과적합 방지 Regularization 기법 (D: l2)
+, loss='squared_hinge'      # 손실계산방식. hinge + l1 은 제공 안 함 (D: squared_hinge)
+, dual=True                 # 쌍대문제를 통해 비선형으로 사용할지 여부 (D:True)
+, tol=0.0001                # stopping 기준 (D:0.0001)
+, C=1.0                     # learning rate (D:1.0)
+, multi_class='ovr'         # 2개 이상의 라벨일 떄 ovr (D:ovr)
+, fit_intercept=True        # 절편(intercept)를 추정할지 여부 (D:True)
+, intercept_scaling=1       # fit_intercept이 True 일 때 계산에 사용되는 scaling (D:1)
+, class_weight=None         # 라벨의 클래스별 가중치 설정. (D:None)
+, verbose=0                 # 학습 출력 여부 (D: 0)
+, random_state=None         # 난수값 (D:None)
+, max_iter=1000             # 학습 epoch (D:1000)
+)
+
+==================================================================================================
+3) CalibratedClassifierCV
+LinearSVC를 기본 모델으로 하여 교차검증하는 학습 방법. 미리 학습 한 모델도 적용 가능하다.
+k-fold, ensemble 기법 등을 사용 할 수 있다.
+
+sklearn.calibration.CalibratedClassifierCV(
+base_estimator=None     # 기본적으로 LinearSVC, 미리 학습한 model이 들어갈 수 있다. (D:None)
+, method='sigmoid'      # calibration에 사용되는 방법 설정. 1000개 미만의 데이터에서는 isotonic 추천 (D: sigmoid)
+, cv=None               # K-folding의 K. None일 경우 기본 5-fold cross-validation. prefit일 경우 pass (D:None)
+, n_jobs=None           # CPU worker (D: None)
+, ensemble=True)        # 매 cv마다 나온 가중치를 마지막 cv에서 ensemble할지 여부. 최종 결과는 매 예측값의 평균으로 반환. prefit일 경우 pass (D:True)
