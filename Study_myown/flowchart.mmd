@@ -1,14 +1,10 @@
 graph LR
-  A([시작]);B_1([끝1]);B_2([끝2]);C{판단 Y/N};D[처리1];E[처리2]
-  A-->C
-  C--YES-->D
-  C--NO-->E
-  D-->B_1
-  E-->B_2
+A([시작]);B_1([끝1]);B_2([끝2]);C{판단 Y/N};D[처리1];E[처리2]
+A-->C
+C--YES-->D
+C--NO-->E
+D-->B_1
+E-->B_2
 
-  node1([시작]);node_2([끝1]);node_3([끝2]);node_4{판단 Y/N};node_5[처리1];node_6[처리2]
-  node1-->node_4
-  node_4--YES-->node_5
-  node_4--NO-->node_6
-  node_5-->node_2
-  node_6-->node_3
+node1([시작]);node2([끝]);node3[/입력/];node4[정보확인]
+node1-->node3;node3-->node4;node4-->node2
