@@ -10,6 +10,7 @@ conda activate [변경할이름]
 conda remove --name [기존환경이름] --all
 
 가상환경 목록 확인 : conda env list
+가상환경에 pip 설치 : conda unstall pip (설치 안 하면 conda install 만 사용 가능)
 
 <설치 목록>
 !!3090 gpu!!
